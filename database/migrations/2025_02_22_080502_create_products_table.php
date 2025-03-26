@@ -17,15 +17,16 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->foreignId('unit_id');
             $table->foreignId('category_id');
+            $table->foreignId('sub_category_id')->nullable();
             $table->string('product_name');
             $table->integer('product_price');
             $table->text('product_description')->nullable();
             $table->string('product_image');
             $table->integer('product_available_quantity');
-            $table->string('product_size')->nullable();
-            $table->string('color')->nullable();
             $table->boolean('promoted_item')->default(false);
-            $table->decimal('vat')->default(2.5);
+            $table->boolean('has_varient')->default(false);
+            $table->double('vat')->default(2.5);
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

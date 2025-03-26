@@ -1,6 +1,13 @@
 <?php
 
 use App\Http\Controllers\frontend\AdminController;
+use App\Http\Controllers\frontend\SignUpController;
+use App\Http\Controllers\frontend\AuthController;
+use App\Http\Controllers\frontend\GalleryController;
+use App\Http\Controllers\frontend\ContuctController;
+use App\Http\Controllers\frontend\FashionController;
+use App\Http\Controllers\frontend\ShopController;
+use App\Http\Controllers\backend\OrdersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +21,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('font.master.mastering');
-});
+// Route::get('/', function () {
+//     return view('font.product.fetch_products');
+// });
+Route::get('/', [AdminController::class, 'indexFontPage']);
 Route::get('admins', [AdminController::class, 'throwBackend']);
 Route::get('admin/newadmin', [AdminController::class, 'newAdmin']);
 Route::post('admin/newadmin', [AdminController::class, 'createAdmin']);
@@ -61,12 +69,20 @@ Route::get('admins/colors_view', [AdminController::class, 'viewColor']);
 Route::post('admins/color', [AdminController::class, 'Color']);
 Route::get('admins/color/edit/{id}', [AdminController::class, 'colorEdit']);
 Route::get('admins/color/delete/{id}', [AdminController::class, 'colorDelete']);
-Route::get('admins/color_update', [AdminController::class, 'colorUpdate']);
+Route::post('admins/color_update', [AdminController::class, 'colorUpdate']);
 // ----------------
+Route::get('admins/sizes', [AdminController::class, 'size']);
+Route::get('admins/size/view', [AdminController::class, 'sizeView']);
+Route::post('admins/size', [AdminController::class, 'newSize']);
+Route::post('admins/size/update', [AdminController::class, 'sizeUpdate']);
+// Route::get('admins/size/edit/{id}', [AdminController::class, 'sizeEdit']);
+Route::get('admins/size/delete/{id}', [AdminController::class, 'sizeDelete']);
+
+
 Route::get('admins/add/attribute', [AdminController::class, 'Attribute']);
 Route::get('admins/attribute_view', [AdminController::class, 'viewAttribute']);
 Route::get('admins/attr/edit/{id}', [AdminController::class, 'editAttribute']);
-Route::post('admins/attr/delete', [AdminController::class, 'deleteAttribute']);
+Route::post('admins/attr/delete', [AdminController::class, 'deleteAttribute']); 
 Route::post('admins/atribute', [AdminController::class, 'newAttribute']);
 Route::post('admins/atribute/update', [AdminController::class, 'updateAttribute']);
 // ------------------------
@@ -76,3 +92,33 @@ Route::get('admins/attr/view_attr_val', [AdminController::class, 'viewAttrValue'
 Route::get('admins/attr/edit_attr_val/{id}', [AdminController::class, 'editAttrValue']);
 Route::post('admins/attr/update_attr_val', [AdminController::class, 'updateAttrValue']);
 Route::get('admins/attr/delete_attr_val/{id}', [AdminController::class, 'deleteAttrValue']);
+// _____________cart Details
+Route::post('/cart/add', [AdminController::class, 'addToCart'])->name('cart.add');
+Route::get('/cart',[AdminController::class, 'cartView']);
+// ----------------------
+Route::get('/login_user',[AuthController::class, 'logInUsers'])->name('login_user');
+Route::post('/login_request',[AuthController::class, 'loginRequest']);
+
+Route::middleware(['auth'])->group(function(){
+    Route::post('/checkout',[SignUpController::class, 'checkOut']);
+});
+// ____________________signUp
+Route::get('/signup_user',[SignUpController::class, 'signUp_User']);
+Route::post('/signup_submit',[SignUpController::class, 'submitSignUp']);
+Route::get('admins/client-view',[SignUpController::class, 'clientsView']);
+Route::get('user/update/{id}',[SignUpController::class, 'userUpdateForm']);
+Route::get('user/delete/{id}',[SignUpController::class, 'userDelete']);
+
+// ---------------
+Route::get('view-products-details/{id}',[SignUpController::class, 'viewProductDetails']);
+Route::get('playgames',[SignUpController::class, 'playGAmes']);
+Route::get('gallery',[GalleryController::class, 'font_ofGallery']);
+Route::get('contuct',[ContuctController::class, 'font_contuct']);
+Route::get('fashion',[FashionController::class, 'font_fashion']);
+Route::get('shop',[ShopController::class, 'fontShop']);
+
+
+Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
+Route::delete('/order/destroy/{id}', [OrdersController::class, 'destroy'])->name('order.destroy');
+Route::get('/order/invoice/{id}', [OrdersController::class, 'showInvoice'])->name('invoice.show');
+Route::get('/order/invoice/download/{id}', [OrdersController::class, 'downloadInvoice'])->name('invoice.download');

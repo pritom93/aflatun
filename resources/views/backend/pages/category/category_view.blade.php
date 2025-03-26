@@ -27,8 +27,10 @@ Category List
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>
+<th scope="col">ID</th>
                 <th scope="col">Category Name</th>
                 <th scope="col">Native Name</th>
+<th scope="col">Parent</th>
                 <th scope="col">Icon</th>
                 <th scope="col">Slug</th>
                 <th scope="col">Home_View</th>
@@ -40,8 +42,10 @@ Category List
         <tbody>
             @foreach ($categories as $value )
             <tr>
+<td>{{$value->id}}</td>
                 <td>{{$value->category_name}}</td>
                 <td>{{$value->category_native_name}}</td>
+<td>{{$value->parent_categroy}}</td>
                 <td><img class="img-fluid" style="width:70px;height:50px"
                         src="{{ asset('images/categories/' . $value->icon) }}" /></td>
                 <td>{{$value->slug}}</td>

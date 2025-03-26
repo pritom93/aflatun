@@ -12,6 +12,7 @@ class Category extends Model
     protected $fillable = [
         'category_name',
         'category_native_name',
+        'parent_categroy',
         'icon',
         'slug',
         'home_view',

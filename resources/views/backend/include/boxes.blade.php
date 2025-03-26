@@ -60,12 +60,13 @@
     </div>
 
     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
+        
         <div class="widget widget-card-four">
             <div class="widget-content">
                 <div class="w-content">
                     <div class="w-info">
-                        <h6 class="value">$ 45,141</h6>
-                        <p class="">Expenses</p>
+                        <h6 class="value">5</h6>
+                        <p class="">Orders</p>
                     </div>
                     <div class="">
                         <div class="w-icon">
@@ -85,6 +86,7 @@
                 </div>
             </div>
         </div>
+      
     </div>
 
     <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">

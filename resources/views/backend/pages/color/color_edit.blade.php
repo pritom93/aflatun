@@ -1,4 +1,4 @@
-@extends('backend.master.masterback');
+{{-- @extends('backend.master.masterback');
 @push('link')
 <link href="{{asset('form/vendor/mdi-font/css/material-design-iconic-font.min.css')}}" rel="stylesheet" media="all">
 <link href="{{asset('form/vendor/font-awesome-4.7/css/font-awesome.min.css')}}" rel="stylesheet" media="all">
@@ -114,4 +114,4 @@ Dashboard
 <script src="{{asset('form/js/global.js')}}"></script>
 
 
-@endpush
+@endpush --}}

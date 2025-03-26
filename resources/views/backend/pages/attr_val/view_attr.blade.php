@@ -40,7 +40,7 @@ Category List
             @foreach ($attrval as $value )
             <tr>
                 <td>{{$value->id}}</td>
-                <td>{{$value->attrname}}</td>
+<td>{{$value->attribute->name}}</td>
                 <td>{{$value->name}}</td>
                 <td>{{$value->description}}</td>
                 <td>{{$value->count}}</td>

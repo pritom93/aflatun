@@ -16,7 +16,8 @@ class Attribute extends Model
         'slug',
         'description',
     ];
-    protected function Attrval(){
-        return HasMany();
+    public function attrvalue()
+    {
+        return $this->hasOne(AttrValue::class);
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 use App\Models\Admin;
 use Illuminate\Support\Str;
 use App\Models\Category;
@@ -16,9 +17,67 @@ use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Attribute;
 use App\Models\AttrValue;
+use App\Models\ProductVarient;
+use App\Models\Size;
 
 class AdminController extends Controller
 {
+    public function addToCart(Request $request)
+    {
+        // return response()->json($request->all());
+        $cart = Session::get('cart', []);
+
+        $found = false;
+    
+        // Loop through cart to check if product already exists
+        foreach ($cart as &$item) {
+            if (
+                $item['product_id'] == $request->product_id &&
+                $item['color'] == $request->color &&
+                $item['size'] == $request->size
+            ) {
+                $item['quantity'] += $request->quantity; // Increase quantity
+                $found = true;
+                break;
+            }
+        }
+    
+        // If product is not in cart, add it as a new entry
+        if (!$found) {
+            $cart[] = [
+                'product_id' => $request->product_id,
+                'product_name' => $request->product_name,
+                'price' => $request->price,
+                'color' => $request->color,
+                'quantity' => $request->quantity,
+                'image' => $request->image,
+                'size' => $request->size,
+            ];
+        }
+    
+        Session::put('cart', $cart);
+    
+        // Calculate total cart quantity
+        $totalQuantity = array_sum(array_column($cart, 'quantity'));
+    
+        return response()->json([
+            'message' => 'Product added to cart!',
+            'cart_count' => $totalQuantity
+        ]);
+    }
+    public function cartView()
+    {
+        return view('font.product.addtoart');
+    }
+    
+    public function indexFontPage()
+    {
+        $products = Product::with(['product_varients.color', 'product_varients.size'])->paginate(12);
+        // return $products;
+       
+        return view('font.product.index_font_page', compact('products'));
+   
+    }
     public function throwBackend()
     {
         return view('backend.pages.dashboard');
@@ -37,7 +96,7 @@ class AdminController extends Controller
             'password' => 'required',
         ]);
 
-        return response()->json($request->all());
+        // return response()->json($request->all());
         if ($request->hasFile('avatar')) {
             $extension = $request->file('avatar')->getClientOriginalExtension();
             $image_name = date('Y-m-d') . uniqid() . time() . '.' . $extension;
@@ -116,10 +175,14 @@ class AdminController extends Controller
     // ------------------
     public function Category()
     {
-        return view('backend.pages.category.new_category');
+        $category = Category::get();
+        return view('backend.pages.category.new_category', [
+            'categories' => $category
+        ]);
     }
     public function newCategory(Request $request)
     {
+
         $formData = $request->all();
         if ($request->hasFile('cicon')) {
             $extension = $request->file('cicon')->getClientOriginalExtension();
@@ -129,12 +192,13 @@ class AdminController extends Controller
         Category::create([
             'category_name' => $formData['cname'],
             'category_native_name' =>  $formData['cn_name'],
+            'parent_categroy' => (int) $formData['parent'] ?? 0,
             'icon' => $image_name,
             'slug' => Str::slug($formData['cname']),
             'home_view' => '0',
             'status' => $formData['cstatus'] == 'active' ? true : false,
         ]);
-        return response()->json(['status' => 'success', 'message' => 'Updated']);
+        return response()->json(['status' => 'success', 'message' => 'Inserted']);
     }
     public function categoryView()
     {
@@ -200,7 +264,7 @@ class AdminController extends Controller
     public function createUnit(Request $request)
     {
         $formData = $request->all();
-        return response()->json($formData);
+
         Unit::create([
             'unit_name' => $formData['name'],
             'slug' => str::slug($formData['name']),
@@ -238,37 +302,85 @@ class AdminController extends Controller
     // --------------------
     public function Products()
     {
-        return view('backend.pages.products.products');
+        $unit = Unit::latest()->get();
+        $category = Category::latest()->get();
+        $attribute = Attribute::get();
+        $color = Color::get();
+        $attrval = AttrValue::get();
+        $size = Size::get();
+        $attrvalsize = AttrValue::where('attrname_id',1)->get();
+        $attrvalcolor = AttrValue::where('attrname_id',2)->get();
+
+        return view('backend.pages.products.products', [
+            'units' => $unit,
+            'categories' => $category,
+            'attributes' => $attribute,
+            'attrvalues' => $attrval,
+            'attrvaluessize' => $attrvalsize,
+            'colors' => $color,
+            'sizes' => $size,
+            'attrvaluescolor' => $attrvalcolor
+        ]);
     }
     public function addProduct(Request $request)
     {
-
-
-
-        // return response()->json($request->name);
         try {
+            DB::beginTransaction();
+            $image_name = '';
             if ($request->hasFile('image')) {
-                $extension = $request->file('image')->getClientOriginalExtension();
-                $image_name = date('Y-m-d') . uniqid() . time() . '.' . $extension;
-                $request['image']->move(public_path('images/products'), $image_name);
+                $image = $request->file('image'); 
+                $extension = $image->getClientOriginalExtension(); 
+                $image_name = date('Y-m-d') . uniqid() . time() . '.' . $extension; 
+                $image->move(public_path('images/products'), $image_name);
             }
-            // return response()->json($image_name);
-            Product::create([
-                'unit_id' => (int)$request->unit,
-                'category_id' => (int)$request->category_id,
-                'product_name' => $request->name,
-                'product_price' => (int)$request->price,
-                'product_description' => $request->des,
+            $combinations = json_decode($request->input('combinations'), true);
+            $product = Product::create([
+                'unit_id' => (int)$request->UnitIDName,
+                'category_id' => (int)$request->CategoryIDName,
+                'sub_category_id' => 0,
+                'product_name' => $request->ProducIDtName,
+                'product_price' => (int)$request->ProductIDPrice,
+                'product_description' => $request->DescriptionIDProduct,
                 'product_image' => $image_name,
-                'product_available_quantity' => (int)$request->qty,
-                'product_size' => $request->size,
-                'color' => $request->color,
-                'promoted_item' => $request->promot == 'yes' ? true : false,
-                'vat' => is_numeric($request->vat) ? (float) $request->vat : 2.5,
+                'product_available_quantity' => (int)$request->ProductIDQNTY,
+                'promoted_item' => $request->subject == 'yes' ? true : false,
+                'has_varient' => count($combinations) > 0 ? 1 : 0,
+                'vat' => $request->ProductVAT ?? 2.5
             ]);
-            return response()->json("noted");
+
+            if (count($combinations) > 0) {
+                foreach ($combinations as $index => $value) {
+                    $variant = null; // Default value
+            
+                    // Retrieve uploaded file using dynamic name
+                    $fileInputName = "variant_image_{$index}";
+                    if ($request->hasFile($fileInputName)) {
+                        $image = $request->file($fileInputName);
+                        $extension = $image->getClientOriginalExtension();
+                        $variant = date('Y-m-d') . uniqid() . time() . '.' . $extension;
+                        $image->move(public_path('images/products/variant'), $variant);
+                    }
+                    ProductVarient::create([
+                        'product_id' => $product->id,
+                        'size_id' => $value['sizeId'],
+                        'color_id' => $value['colorId'],
+                        'cost_price' => $value['costing'],
+                        'price' => $value['price'],
+                        'stock' => $value['stock'],
+                        'sku' => $value['sku'],
+                        'discount' => $value['discount'],
+                        'image' => $variant
+                    ]);
+                }
+            }
+            DB::commit();
+            return response()->json(['status' => 'success', 'message' => 'Product Created Successfully']);
         } catch (\Throwable $th) {
-            return response()->json($th);
+            if(file_exists(public_path('images/products/'.$image_name))){
+                unlink(public_path('images/products/'.$image_name));
+            }
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'message' => $th->getMessage()]);
         }
     }
     public function productView()
@@ -278,43 +390,134 @@ class AdminController extends Controller
     }
     public function productUpdateForm($id)
     {
+        $unit = Unit::latest()->get();
+        $category = Category::latest()->get();
+        $attribute = Attribute::get();
+        $attrval = AttrValue::get();
+        $attrvalsize = AttrValue::where('attrname_id',1)->get();
+        $attrvalcolor = AttrValue::where('attrname_id',2)->get();
         $id = Product::find($id)->first();
-        return view('backend.pages.products.product_edit', ['products' => $id]);
+        $vrid = ProductVarient::where('product_id',$id)->get();
+        return view('backend.pages.products.product_edit', [
+            'products' => $id,
+            'units' => $unit,
+            'categories' => $category,
+            'attributes' => $attribute,
+            'attrvalues' => $attrval,
+            'attrvaluessize' => $attrvalsize,
+            'attrvaluescolor' => $attrvalcolor,
+            'vrid' => $vrid
+        ]);
     }
     public function updateProducts(Request $request)
     {
         // return response()->json($request->all());
         try {
-            $id = $request->id;
-            $products_id = Product::find($id);
-            $image_name = $products_id->product_image;
-            if ($request->hasFile('image')) {
-                $extension = $request->file('image')->getClientOriginalExtension();
-                $image_name = date('Y-m-d') . uniqid() . time() . '.' . $extension;
-                $request['image']->move(public_path('images/products'), $image_name);
-                if ($products_id->product_image && file_exists(public_path('images/products/')
-                    . $products_id->product_image)) {
-                    unlink(public_path('images/products/') . $products_id->product_image);
-                }
+            
+        //     $image_name = $products_id->product_image;
+        //     if ($request->hasFile('image')) {
+        //         $extension = $request->file('image')->getClientOriginalExtension();
+        //         $image_name = date('Y-m-d') . uniqid() . time() . '.' . $extension;
+        //         $request['image']->move(public_path('images/products'), $image_name);
+        //         if ($products_id->product_image && file_exists(public_path('images/products/')
+        //             . $products_id->product_image)) {
+        //             unlink(public_path('images/products/') . $products_id->product_image);
+        //         }
+        //     }
+        //     // return response()->json($id);
+        //     $products_id->update([
+        //         'unit_id' => (int)$request->unit,
+        //         'category_id' => (int)$request->category_id,
+        //         'product_name' => $request->name,
+        //         'product_price' => (int)$request->price,
+        //         'product_description' => $request->des,
+        //         'product_image' => $image_name,
+        //         'product_available_quantity' => (int)$request->qty,
+        //         'product_size' => $request->size,
+        //         'color' => $request->color,
+        //         'promoted_item' => $request->promot == 'yes' ? true : false,
+        //         'vat' => is_numeric($request->vat) ? (float) $request->vat : 2.5,
+        //     ]);
+        // } catch (\Throwable $th) {
+        //     return response()->json($th);
+        // }
+        $id = $request->ProductHiddenID;
+        $product = Product::findOrFail($id); // Get the product
+        DB::beginTransaction();
+        // Handle main product image update
+        $image_name = $product->product_image; // Keep old image if not changed
+        if ($request->hasFile('image')) {
+            $image = $request->file('image'); 
+            $extension = $image->getClientOriginalExtension(); 
+            $image_name = date('Y-m-d') . uniqid() . time() . '.' . $extension; 
+            $image->move(public_path('images/products'), $image_name);
+
+            // Delete old image
+            if ($product->product_image && file_exists(public_path('images/products/') . $product->product_image)) {
+                unlink(public_path('images/products/') . $product->product_image);
             }
-            // return response()->json($id);
-            $products_id->update([
-                'unit_id' => (int)$request->unit,
-                'category_id' => (int)$request->category_id,
-                'product_name' => $request->name,
-                'product_price' => (int)$request->price,
-                'product_description' => $request->des,
-                'product_image' => $image_name,
-                'product_available_quantity' => (int)$request->qty,
-                'product_size' => $request->size,
-                'color' => $request->color,
-                'promoted_item' => $request->promot == 'yes' ? true : false,
-                'vat' => is_numeric($request->vat) ? (float) $request->vat : 2.5,
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json($th);
         }
+        // Update the product
+        $product->update([
+            'unit_id' => (int)$request->UnitIDName,
+            'category_id' => (int)$request->CategoryIDName,
+            'sub_category_id' => 0,
+            'product_name' => $request->ProducIDtName,
+            'product_price' => (int)$request->ProductIDPrice,
+            'product_description' => $request->DescriptionIDProduct,
+            'product_image' => $image_name,
+            'product_available_quantity' => (int)$request->ProductIDQNTY,
+            'promoted_item' => $request->subject == 'yes' ? true : false,
+            'has_varient' => count(json_decode($request->input('combinations'), true)) > 0 ? 1 : 0,
+            'vat' => $request->ProductVAT ?? 2.5
+        ]);
+
+        // Handle variant updates
+        $combinations = json_decode($request->input('combinations'), true);
+        if (!empty($combinations)) {
+            foreach ($combinations as $index => $value) {
+                $variantImage = null;
+
+                // Handle variant image upload
+                $fileInputName = "variant_image_{$index}";
+                if ($request->hasFile($fileInputName)) {
+                    $image = $request->file($fileInputName);
+                    $extension = $image->getClientOriginalExtension();
+                    $variantImage = date('Y-m-d') . uniqid() . time() . '.' . $extension;
+                    $image->move(public_path('images/products/variant'), $variantImage);
+                }
+
+                // Find existing variant or create new
+                
+                $variant = ProductVarient::updateOrCreate(
+                    ['product_id' => $product->id,
+                     'size_id' => $value['sizeId'], 
+                     'color_id' => $value['colorId']
+                    ],
+                    [
+                        'cost_price' => $value['costing'],
+                        'price' => $value['price'],
+                        'stock' => $value['stock'],
+                        'sku' => $value['sku'],
+                        'discount' => $value['discount'],
+                        'image' => $variantImage ?? ProductVarient::where([
+                            'product_id' => $product->id, 
+                            'size_id' => $value['sizeId'], 
+                            'color_id' => $value['colorId']
+                        ])->value('image') // Keep old image if no new one uploaded
+                    ]
+                );
+            }
+        }
+
+        DB::commit();
+        return response()->json(['status' => 'success', 'message' => 'Product Updated Successfully']);
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        return response()->json(['status' => 'error', 'message' => $th->getMessage()]);
     }
+    }
+    
     public function deleteProducts($id)
     {
 
@@ -444,7 +647,7 @@ class AdminController extends Controller
                     'color_name' => $request->name,
                     'color_code' => $request->id
                 ]);
-                return response()->json("Color Added SuccessFully");
+                response()->json(['status' => 'success', 'message' => 'Color Added Successfully']);
             }
         } catch (\Throwable $th) {
             return response()->json([
@@ -454,7 +657,7 @@ class AdminController extends Controller
     }
     public function viewColor()
     {
-        $color = Color::get();
+        $color = Color::latest()->get();
         return view('backend.pages.color.color_view', ['colors' => $color]);
     }
     public function colorEdit($id)
@@ -469,28 +672,27 @@ class AdminController extends Controller
     }
     public function colorUpdate(Request $request)
     {
-        return response()->json($request->all());
-        $id = $request->hid;
-        $updateid = Color::find($id);
+        // return response()->json($request->all());
+        $updateid = Color::find($request->id);
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
-                'id' => 'required'
+                'native_name' => 'required'
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'errors' => $validator->errors()
                 ], 422);
-            } else {
-                $updateid->update([
-                    'color_name' => $request->name,
-                    'color_code' => $request->id
-                ]);
-                return response()->json("Color Update SuccessFully");
             }
+            $updateid->update([
+                'color_name' => $request->name,
+                'color_code' => $request->native_name
+            ]);
+            return response()->json(["status" => "success", "message" => "Color Update Successfully"]);
         } catch (\Throwable $th) {
             return response()->json([
+                "status" => "error",
                 'error' => $th->getMessage()
             ], 500);
         }
@@ -591,11 +793,12 @@ class AdminController extends Controller
     // -----------
     public function attrValue()
     {
-        return view('backend.pages.attr_val.new_value');
+        $attr = Attribute::get();
+        return view('backend.pages.attr_val.new_value', ['attrs' => $attr]);
     }
     public function newAttrValue(Request $request)
     {
-        // return response()->json($request->all());
+        //return response()->json($request->all());
         try {
             $validator = Validator::make($request->all(), [
                 'attrname' => 'required|string|max:255',
@@ -624,7 +827,8 @@ class AdminController extends Controller
     }
     public function viewAttrValue()
     {
-        $viewdata = AttrValue::get();
+        $viewdata = AttrValue::with('attribute:id,name')->get();
+        // dd($viewdata);
         return view('backend.pages.attr_val.view_attr', [
             'attrval' => $viewdata
         ]);
@@ -673,4 +877,74 @@ class AdminController extends Controller
             return redirect()->back()->with(['status' => 'Deleted']);
         }
     }
+    
+    public function size()
+    {
+        return view('backend.pages.size.newsize');
+    }
+    public function newSize(Request $request)
+    {
+         // return response()->json($request->all());
+         try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required',
+                'id' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'errors' => $validator->errors()
+                ], 422);
+            } else {
+                Size::create([
+                    'size' => $request->name,
+                    'size_code' => $request->id
+                ]);
+                response()->json(['status' => 'success', 'message' => 'Size Added Successfully']);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function sizeUpdate(Request $request)
+    {
+        // return response()->json($request->all());
+        $updateid = Size::find($request->id);
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required',
+                'SizeCode' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            $updateid->update([
+                'size' => $request->name,
+                'size_code' => $request->SizeCode
+            ]);
+            return response()->json(["status" => "success", "message" => "Color Update Successfully"]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => "error",
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function sizeView()
+    {
+        $size = Size::latest()->get();
+        return view('backend.pages.size.viewsize', ['sizes' => $size]);
+    }
+    public function sizeDelete($id)
+    {
+        $size = Size::where('id', $id)->delete();
+        return redirect()->back();
+    }
+
 }

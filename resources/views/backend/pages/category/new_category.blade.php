@@ -48,6 +48,22 @@ Dashboard
                     </div>
                 </div>
                 <div class="form-row">
+<div class="name">Parent Category</div>
+                    <div class="value">
+                        <div class="input-group">
+                            <div class="rs-select2 js-select-simple select--no-search">
+                                <select id="ParentCategoryID" name="subject">
+                                    <option disabled="disabled" selected="selected">Parent Category</option>
+                                    @foreach ($categories as $value)
+                                    <option value="{{$value->id}}">{{$value->category_name}}</option>
+                                    @endforeach
+                                </select>
+                                <div class="select-dropdown"></div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="form-row">
                     <div class="name">ICON</div>
                     <div class="value">
                         <div class="input-group">
@@ -89,11 +105,13 @@ Dashboard
             var c_name = $('#CategoryName').val(); 
             var c_n_name = $('#nativeName').val();
             var c_status = $('#CategoryStatus').val();
+var parent = $('#ParentCategoryID').val();
             
             const category = new FormData();
             category.append('cname', c_name);
             category.append('cn_name', c_n_name);
             category.append('cstatus', c_status);
+category.append('parent', parent);
             
             
             const fileInput = document.getElementById("CategoryIcon");

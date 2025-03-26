@@ -34,8 +34,13 @@ Values
                         <div class="name">Attribute Name</div>
                         <div class="value">
                             <div class="input-group">
-                                <input class="input--style-5" type="number" value="" id="AttrValNameID"
-                                    name="AttrValNameID">
+                                <select class="input--style-5" aria-label="Default select example" id="AttrValNameID">
+                                    <option selected>Open this select menu</option>
+                                    @foreach ($attrs as $value)
+                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                    @endforeach
+
+                                </select>
                             </div>
                         </div>
                     </div>

@@ -132,6 +132,21 @@
                     </div>
                 </a>
             </li>
+            <li class="menu">
+                <a href="{{url('admins/sizes')}}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-file-plus">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        <span>Size</span>
+                    </div>
+                </a>
+            </li>
 
             <li class="menu">
                 <a href="{{url('admins/add/attribute')}}" aria-expanded="false" class="dropdown-toggle">
@@ -172,7 +187,7 @@
                             <line x1="8" y1="2" x2="8" y2="6"></line>
                             <line x1="3" y1="10" x2="21" y2="10"></line>
                         </svg>
-                        <span>Calendar</span>
+                        <span></span>
                     </div>
                 </a>
             </li>
@@ -227,6 +242,10 @@
                         <a href="{{url('admins/colors_view')}}"> Color </a>
                     </li>
                     <li>
+                        <a href="{{url('admins/size/view')}}"> Size </a>
+                    </li>
+                    
+                    <li>
                         <a href="{{url('admins/attribute_view')}}"> Attribute </a>
                     </li>
                     <li>
@@ -264,7 +283,7 @@
                             class="feather feather-zap">
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                         </svg>
-                        <span>Elements</span>
+                        <span>Fonted</span>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -276,7 +295,7 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="elements" data-parent="#accordionExample">
                     <li>
-                        <a href="element_alerts.html"> Alerts </a>
+                        <a href="{{url('admins/client-view')}}"> Clients </a>
                     </li>
                     <li>
                         <a href="element_avatar.html"> Avatar </a>

@@ -17,6 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->string('category_name');
             $table->string('category_native_name');
+            $table->integer('parent_categroy')->default(0);
             $table->string('icon')->nullable();
             $table->string('slug')->nullable();
             $table->boolean('home_view')->default(false);

@@ -34,8 +34,6 @@ Category List
                 <th scope="col">PRICE</th>
                 <th scope="col">DES</th>
                 <th scope="col">IMG</th>
-                <th scope="col">SIZE</th>
-                <th scope="col">COLOR</th>
                 <th scope="col">QTY</th>
                 <th scope="col">PROMOTED</th>
                 <th scope="col">VAT</th>
@@ -46,16 +44,25 @@ Category List
         <tbody>
             @foreach ($products as $value )
             <tr>
+                
+                
+            
                 <td>{{$value->id}}</td>
                 <td>{{$value->unit_id}}</td>
                 <td>{{$value->category_id}}</td>
                 <td>{{$value->product_name}}</td>
                 <td>{{$value->product_price}}</td>
-                <td>{{$value->product_description}}</td>
+                <td>
+                    <span class="short-desc">
+                        {{ \Illuminate\Support\Str::limit($value->product_description, 15, '...') }}
+                    </span>
+                    <span class="full-desc d-none">
+                        {{ $value->product_description }}
+                    </span>
+                    <a href="#" class="toggle-desc">See More</a>
+                </td>
                 <td><img class="img-fluid" style="width:70px;height:50px"
                         src="{{ asset('images/products/' . $value->product_image) }}" /></td>
-                <td>{{$value->product_size}}</td>
-                <td>{{$value->color}}</td>
                 <td>{{$value->product_available_quantity}}</td>
                 <td>{{$value->promoted_item}}</td>
                 <td>{{$value->vat}}</td>
@@ -71,3 +78,27 @@ Category List
     </table>
 </div>
 @endsection
+@push('backend_script')
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".toggle-desc").forEach(function (element) {
+            element.addEventListener("click", function (event) {
+                event.preventDefault();
+                let parent = this.closest("td");
+                let shortDesc = parent.querySelector(".short-desc");
+                let fullDesc = parent.querySelector(".full-desc");
+
+                if (fullDesc.classList.contains("d-none")) {
+                    shortDesc.classList.add("d-none");
+                    fullDesc.classList.remove("d-none");
+                    this.textContent = "See Less";
+                } else {
+                    shortDesc.classList.remove("d-none");
+                    fullDesc.classList.add("d-none");
+                    this.textContent = "See More";
+                }
+            });
+        });
+    });
+</script>
+@endpush

@@ -11,7 +11,12 @@ class AttrValue extends Model
     protected $table = 'attrvalues';
 
     protected $fillable = ['attrname_id', 'name', 'description', 'count'];
-    protected function attribute(){
-        return $this->belongsTo();
+
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class, 'attrname_id')->withDefault([
+            'id' => 0,
+            'name' => 'Aflatun'
+        ]);
     }
 }

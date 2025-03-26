@@ -93,9 +93,7 @@ Values
             des: des,
             count: count,
             id: id
-        }
-
-        
+        }       
         $.ajax({
             url: "{{url('admins/attr/update_attr_val')}}",
             type: 'POST',
