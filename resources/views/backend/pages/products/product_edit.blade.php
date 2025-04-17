@@ -29,7 +29,7 @@ Dashboard
                     <div class="form-row mb-4">
                         <div class="form-group col-md-4">
                             <label for="inputAddress">Product name</label>
-                            <input class="form-control" type="text" value="{{$products->product_name}}" id="ProductName" name="ProducIDtName">
+                            <input class="form-control" type="text" value="{{$products->name}}" id="ProductName" name="ProducIDtName">
                             <input class="form-control" value="{{$products->id}}" type="hidden" name="ProductHiddenID">
                         </div>
                         <div class="form-group col-md-4">
@@ -140,7 +140,7 @@ Dashboard
                     </div>
                     <div class="form-group mb-4">
                         <label for="inputCity">Description</label>
-                        <textarea class="form-control" value="{{$products->product_description}}" id="DescriptionProduct" name="DescriptionIDProduct" cols="30" rows="5"></textarea>
+                        <textarea class="form-control" value="{{$products->description}}" id="DescriptionProduct" name="DescriptionIDProduct" cols="30" rows="5"></textarea>
                     </div>
                     
                     <button class="btn btn--radius-2 btn--red" type="submit">SUBMIT</button>

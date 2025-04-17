@@ -21,4 +21,6 @@ protected $table = 'clients';
         'terms_accepted',
         'image',
     ];
+
+    
 }

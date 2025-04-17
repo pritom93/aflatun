@@ -67,6 +67,7 @@
                     <button type="submit" class="btn btn-success w-100">Log In</button>
                 </form>
             </div>
+            <a href="{{url('/signup_user')}}" class="btn btn-primary w-100 mt-3">Create an Account</a>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

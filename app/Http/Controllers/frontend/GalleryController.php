@@ -9,7 +9,7 @@ use App\Models\Product;
 class GalleryController extends Controller
 {
     public function font_ofGallery(){
-        $gallery = Product::select('product_image')->get();
+        $gallery = Product::select('image')->get();
         // return $gallery;
         return view('font.gallery.gallery',['galleries' => $gallery]);
     }

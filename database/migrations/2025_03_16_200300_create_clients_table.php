@@ -23,6 +23,7 @@ class CreateClientsTable extends Migration
             $table->text('address');
             $table->string('email')->unique();
             $table->string('password');
+            $table->enum('address_type', ['home', 'office'])->default('home');
             $table->boolean('terms_accepted')->default(false);
             $table->string('image')->nullable();
             $table->timestamps();

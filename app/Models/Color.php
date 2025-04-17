@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-use App\Models\ProductVarient;
+use App\Models\ProductVariant;
 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +17,6 @@ class Color extends Model
     ];
             public function productVariants()
         {
-            return $this->hasMany(ProductVarient::class);
+            return $this->hasMany(ProductVariant::class);
         }
 }

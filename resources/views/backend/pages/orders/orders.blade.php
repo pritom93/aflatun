@@ -56,7 +56,7 @@ Order View
     .custom-table {
         width: 100%;
         border-collapse: collapse;
-        background: rgb(53, 51, 51);
+        background: #010601;
         color: white;
         text-align: center;
         border-radius: 10px;
@@ -69,7 +69,7 @@ Order View
     }
     .custom-table td {
         padding: 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid rgba(10, 1, 1, 0.2);
     }
 
     /* Hover Effect */
@@ -78,7 +78,7 @@ Order View
     }
     .custom-table tbody tr:hover {
         transform: scale(1.009);
-        background: rgb(39, 35, 35);
+        background: rgb(0, 0, 0);
     }
 
     /* Custom Buttons */

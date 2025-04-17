@@ -16,7 +16,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Size;
 use App\Models\Color;
-use App\Models\ProductVarient;
+use App\Models\ProductVariant;
 
 class SignUpController extends Controller
 {
@@ -53,7 +53,8 @@ class SignUpController extends Controller
                 User::create([
                     'name' => $request->firstName,
                     'email' => $request->email,
-                    'password' => Hash::make($request->password)
+                    'phone' => $request->phone,
+                    'password' => Hash::make($request->password),
                    
                 ]);
             }
@@ -81,9 +82,47 @@ class SignUpController extends Controller
             'clients' => $client
         ]);
     }
+
+
+    public function updateProfile(Request $request)
+        {
+            try {
+                $user = Auth::user(); 
+                $client = Client::where('email', $user->email)->first();
+        
+                if (!$client) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Client not found.'
+                    ]);
+                }
+        
+                // Check old password before allowing update
+                if (!Hash::check($request->old_password, $user->password)) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Old password does not match.'
+                    ]);
+                }
+        
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Profile updated successfully.'
+                ]);
+        
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Something went wrong.',
+                    'error' => $th->getMessage()
+                ]);
+            }
+        }
+
+
     public function userUpdateForm($id)
     {
-        return "okey";
+        return view('font.profile.update_profile');
     }
     public function userDelete($id)
     {
@@ -109,67 +148,9 @@ class SignUpController extends Controller
         return view('font.games.game');
     }
 
-    public function checkOut(Request $request)
-    {
-        $data = json_decode($request->getContent(), true);
-        //  return response()->json($data);
-        try {
-            $validatedData = $request->validate([
-                'name' => 'required|string',
-                'phone' => 'required|string',
-                'email' => 'required|email',
-                'address' => 'required|string',
-                'payment' => 'required|string',
-                'receiving' => 'nullable|string',
-                'shipping' => 'required|numeric',
-                'subtotal' => 'required|numeric',
-                'tax' => 'required|numeric',
-                'total' => 'required|numeric',
-                'cart' => 'required|array',
-            ]);
     
-            // Insert order data into the database
-            $order = Order::create([
-                'name' => $validatedData['name'],
-                'phone' => $validatedData['phone'],
-                'email' => $validatedData['email'],
-                'address' => $validatedData['address'],
-                'payment_method' => $validatedData['payment'],
-                'receiving_time' => $validatedData['receiving'] ?: null,
-                'shipping_charge' => $validatedData['shipping'],
-                'subtotal' => $validatedData['subtotal'],
-                'tax' => $validatedData['tax'],
-                'total' => $validatedData['total'],
-            ]);
-            foreach ($validatedData['cart'] as $item) {
-                // return response()->json($item);
-                orderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item['id'],
-                    'product_name' => $item['product'],
-                    'color' => $item['color'],
-                    'price' => $item['price'],
-                    'quantity' => $item['quantity'],
-                ]);
-            }
-            Session::forget('cart');
-     
-
-        return response()->json([
-            'message' => 'Order created successfully',
-            'order' => $order,
-            'cart_cleared' => true 
-        ], 201);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage(),
-                'cart_cleared' => false 
-            ], 201);
-        }
-        
-    }
     public function viewProductDetails($id){
-        $products = Product::with(['colors:id,color_name,color_code','sizes:id,size','product_varients:id,product_id,color_id,size_id,price,stock,sku,image'])
+        $products = Product::with(['colors:id,color_name,color_code','sizes:id,size_name','product_variants:id,product_id,color_id,size_id,price,stock,sku,image'])
             ->find($id);
             // return $products;    
         return view('font.product.view_details', compact('products'));

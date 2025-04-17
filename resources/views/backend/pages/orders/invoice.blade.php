@@ -38,7 +38,7 @@ Invoice #{{ $order->id }}
                 <table class="table invoice-table text-center">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>ID</th>
                             <th>Product</th>
                             <th>Color</th>
                             <th>Price</th>
@@ -50,7 +50,7 @@ Invoice #{{ $order->id }}
                         @foreach ($orderItems as $key => $item)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td>{{ $item->product_name }}</td>
+                            <td>{{ $item->name }}</td>
                             <td>{{ $item->color }}</td>
                             <td>${{ number_format($item->price, 2) }}</td>
                             <td>{{ $item->quantity }}</td>
@@ -83,6 +83,9 @@ Invoice #{{ $order->id }}
                 <a href="{{ route('invoice.download', $order->id) }}" class="btn custom-btn download-btn">
                     <i class="fas fa-file-download"></i> Download PDF
                 </a>
+                {{-- <a href="{{ route('invoice.download', $order->id) }}" class="btn custom-btn download-btn">
+                    <i class="fas fa-file-download"></i> Order Accepted
+                </a> --}}
             </div>
         </div>
     </div>

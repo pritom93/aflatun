@@ -4,7 +4,7 @@
 @section('content')
 <div class="row">
     <!-- Left Sidebar (Advertisement) -->
-    <div class="col-md-2">
+    {{-- <div class="col-md-2">
         <div class="menu p-3 bg-light border rounded">
             <h5>Menu</h5>
             <ul class="list-group">
@@ -14,7 +14,7 @@
                 <li class="list-group-item"><a href="#">Contact</a></li>
             </ul>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Center Content (Products) -->
     <div class="col-md-9">
@@ -24,11 +24,11 @@
                 <div class="product-card p-3 border rounded">
                     <!-- Product Image -->
                     <img id="product-image-{{$product->id}}" 
-                         src="{{ asset('images/products/'.$product->product_image) }}" 
+                         src="{{ asset('images/products/'.$product->image) }}" 
                          style="height: 180px; width:100%;" alt="Product Image">
                     
                     <div class="product-details mt-3">
-                        <h5 class="product-title">{{$product->product_name}}</h5>
+                        <h5 class="product-title">{{$product->name}}</h5>
                         <div class="product-rating">★★★★☆ (4.5)</div>
 
                         <!-- Product Price -->
@@ -50,6 +50,7 @@
                                     data-image="{{ asset('images/products/variant/'.$variation->image) }}" 
                                     data-price="{{ $variation->price }}"
                                     data-color="{{ $colorCode }}"
+                                    data-colorId="{{ $variation->color_id }}"
                                     style="width: 30px; height: 30px; background-color: {{ $colorCode }}; border: 2px solid #ddd;">
                                 </button>
                             @endforeach
@@ -60,9 +61,10 @@
                                 <button class="size-btn me-2 border rounded px-3 py-1" 
                                     data-product-id="{{ $product->id }}" 
                                     data-price="{{ $variation->price }}"
-                                    data-size="{{ $variation->size->size ?? $variation->size_id }}"
+                                    data-size="{{ $variation->size->size_name ?? $variation->size_id }}"
+                                    data-sizeId="{{ $variation->size_id }}"
                                     style="background-color: #f8f9fa; border: 2px solid #ddd; font-weight: bold;">
-                                    {{ $variation->size->size ?? $variation->size_id }}
+                                    {{ $variation->size->size_name ?? $variation->size_id }}
                                 </button>
                             @endforeach
                         </div>
@@ -70,7 +72,7 @@
                         <!-- Add to Cart Button -->
                         <button class="btn btn-add-cart w-100 mt-2 btn-primary add-to-cart"
                             data-product-id="{{ $product->id }}"
-                            data-product-name="{{ $product->product_name }}"
+                            data-product-name="{{ $product->name }}"
                             data-price="{{ $product->product_variation->first()->price ?? 0 }}"
                             data-color=""
                         >
@@ -216,6 +218,8 @@
         var price = $(this).data("price");
         var color = $(this).data("color");
         var size = $(this).data("size");
+        var colorId = $(this).data("colorId");
+        var sizeId = $(this).data("sizeId");
         var image = $(this).data("image");
 
         if (!color || !size) {
@@ -223,7 +227,7 @@
             return;
         }
 
-        console.log("Adding to cart:", { productId, productName, price, color, size, image });
+        console.log("Adding to cart:", { productId, productName, price, sizeId, colorId, image });
 
         $.ajax({
             url: "{{ route('cart.add') }}",
@@ -231,7 +235,7 @@
             data: {
                 _token: "{{ csrf_token() }}",
                 product_id: productId,
-                product_name: productName,
+                name: productName,
                 price: price,
                 color: color,
                 size: size,
@@ -240,6 +244,7 @@
             },
             success: function(response) {
                 console.log(response);
+                return false;
                     Swal.fire({
                         title: "Success!",
                         text: response.message,
@@ -298,7 +303,7 @@
     //             data: {
     //                 _token: "{{ csrf_token() }}",
     //                 product_id: productId,
-    //                 product_name: productName,
+    //                 name: productName,
     //                 price: price,
     //                 color: color,
     //                 quantity: 1

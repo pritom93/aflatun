@@ -50,14 +50,14 @@ Category List
                 <td>{{$value->id}}</td>
                 <td>{{$value->unit_id}}</td>
                 <td>{{$value->category_id}}</td>
-                <td>{{$value->product_name}}</td>
+                <td>{{$value->name}}</td>
                 <td>{{$value->product_price}}</td>
                 <td>
                     <span class="short-desc">
-                        {{ \Illuminate\Support\Str::limit($value->product_description, 15, '...') }}
+                        {{ \Illuminate\Support\Str::limit($value->description, 15, '...') }}
                     </span>
                     <span class="full-desc d-none">
-                        {{ $value->product_description }}
+                        {{ $value->description }}
                     </span>
                     <a href="#" class="toggle-desc">See More</a>
                 </td>

@@ -46,7 +46,7 @@ Category List
                 <td>{{$value->woner}}</td>
                 <td>{{$value->phone}}</td>
                 <td>{{$value->address}}</td>
-                <td>{{$value->product_name}}</td>
+                <td>{{$value->name}}</td>
                 <td><img class="img-fluid" style="width:70px;height:50px"
                         src="{{ asset('images/brands/' . $value->image) }}" /></td>
                 <td>

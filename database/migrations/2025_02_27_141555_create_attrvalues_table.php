@@ -17,6 +17,7 @@ class CreateAttrvaluesTable extends Migration
             $table->id();
             $table->foreignId('attrname_id');
             $table->string('name');
+            $table->string('slug')->nullable();
             $table->text('description')->nullable();
             $table->integer('count')->default(0);
             $table->timestamps();

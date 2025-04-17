@@ -8,6 +8,9 @@ use App\Http\Controllers\frontend\ContuctController;
 use App\Http\Controllers\frontend\FashionController;
 use App\Http\Controllers\frontend\ShopController;
 use App\Http\Controllers\backend\OrdersController;
+use App\Http\Controllers\backend\DesignerController;
+use App\Http\Controllers\frontend\UserController;
+use App\Models\Designer;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -95,12 +98,14 @@ Route::get('admins/attr/delete_attr_val/{id}', [AdminController::class, 'deleteA
 // _____________cart Details
 Route::post('/cart/add', [AdminController::class, 'addToCart'])->name('cart.add');
 Route::get('/cart',[AdminController::class, 'cartView']);
+Route::post('/remove-cart', [AdminController::class, 'removeCartItem']);
 // ----------------------
 Route::get('/login_user',[AuthController::class, 'logInUsers'])->name('login_user');
 Route::post('/login_request',[AuthController::class, 'loginRequest']);
 
 Route::middleware(['auth'])->group(function(){
-    Route::post('/checkout',[SignUpController::class, 'checkOut']);
+    Route::post('/checkout',[OrdersController::class, 'checkOut']);
+    Route::get('logout',[AuthController::class, 'logout'])->name('logout');
 });
 // ____________________signUp
 Route::get('/signup_user',[SignUpController::class, 'signUp_User']);
@@ -118,7 +123,20 @@ Route::get('fashion',[FashionController::class, 'font_fashion']);
 Route::get('shop',[ShopController::class, 'fontShop']);
 
 
+
 Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
 Route::delete('/order/destroy/{id}', [OrdersController::class, 'destroy'])->name('order.destroy');
 Route::get('/order/invoice/{id}', [OrdersController::class, 'showInvoice'])->name('invoice.show');
 Route::get('/order/invoice/download/{id}', [OrdersController::class, 'downloadInvoice'])->name('invoice.download');
+
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::post('/update_user', [SignUpController::class, 'updateProfile'])->middleware('auth');
+  
+});
+// Desiner
+Route::get('admins/new-designer',[DesignerController::class, 'newDesigner']);
+Route::post('/designer/store', [DesignerController::class, 'newDesigner'])->name('designer.store');
+Route::get('admins/view-designer',[DesignerController::class, 'viewDesigners']);

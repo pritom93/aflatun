@@ -14,6 +14,11 @@ class User extends Model implements Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
     ];
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'email', 'email');
+    }
 }

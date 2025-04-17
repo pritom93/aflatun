@@ -16,10 +16,10 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('category_name');
+            $table->string('slug')->nullable();
             $table->string('category_native_name');
             $table->integer('parent_categroy')->default(0);
             $table->string('icon')->nullable();
-            $table->string('slug')->nullable();
             $table->boolean('home_view')->default(false);
             $table->boolean('status')->default(true);
             $table->timestamps();

@@ -10,11 +10,11 @@ class Size extends Model
     use HasFactory;
     protected $table = 'sizes';
     protected $fillable = [
-        'size',
+        'size_name',
         'size_code'
     ];
     public function productVariants()
     {
-        return $this->hasMany(ProductVarient::class);
+        return $this->hasMany(ProductVariant::class);
     }
 }

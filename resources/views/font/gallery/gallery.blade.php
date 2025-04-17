@@ -9,10 +9,10 @@ Gallery
     <div class="row g-4">
         @foreach ($galleries as $gallery)
         <div class="col-md-4">
-            <a href="{{ asset('images/products/' . $gallery->product_image) }}" class="gallery-item">
+            <a href="{{ asset('images/products/' . $gallery->image) }}" class="gallery-item">
                 <div class="card shadow-sm border-0">
                     <div class="gallery-img-wrapper">
-                        <img src="{{ asset('images/products/' . $gallery->product_image) }}" class="img-fluid rounded" alt="Gallery Image">
+                        <img src="{{ asset('images/products/' . $gallery->image) }}" class="img-fluid rounded" alt="Gallery Image">
                         <div class="overlay">
                             <h5 class="text-white">Beautiful View</h5>
                         </div>

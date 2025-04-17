@@ -85,7 +85,7 @@ CREATE TABLE `brands` (
   `woner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -95,7 +95,7 @@ CREATE TABLE `brands` (
 -- Dumping data for table `brands`
 --
 
-INSERT INTO `brands` (`id`, `name`, `woner`, `phone`, `address`, `product_name`, `image`, `created_at`, `updated_at`) VALUES
+INSERT INTO `brands` (`id`, `name`, `woner`, `phone`, `address`, `name`, `image`, `created_at`, `updated_at`) VALUES
 (1, 'Amir Bruce', 'Doloremque ipsum nem', '+1 (956) 237-7087', 'Numquam vero minima', 'Russell Chandler', '2025-03-2067dc360329e5b1742484995.webp', '2025-03-20 09:36:35', '2025-03-20 09:36:35'),
 (2, 'Jameson Pearson', 'Labore sit odit ut', '+1 (766) 704-3309', 'Est ex voluptatem M', 'Teegan Boyle', '2025-03-2067dc36107d3e41742485008.webp', '2025-03-20 09:36:48', '2025-03-20 09:36:48'),
 (3, 'Dale Carr', 'Id deserunt minima b', '+1 (693) 137-6065', 'Placeat irure volup', 'Zeus Faulkner', '2025-03-2067dc36134a0901742485011.webp', '2025-03-20 09:36:51', '2025-03-20 09:36:51'),
@@ -236,7 +236,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (40, '2025_02_24_135000_create_colors_table', 1),
 (41, '2025_02_25_125631_create_attributes_table', 1),
 (42, '2025_02_27_141555_create_attrvalues_table', 1),
-(43, '2025_03_13_175645_create_product_varients_table', 1),
+(43, '2025_03_13_175645_create_product_variants_table', 1),
 (44, '2025_03_16_200300_create_clients_table', 1),
 (45, '2025_03_19_193805_create_orders_table', 1),
 (46, '2025_03_19_212339_create_order_items_table', 1),
@@ -307,7 +307,7 @@ CREATE TABLE `order_items` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
   `product_id` int(11) NOT NULL,
-  `product_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `color` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` decimal(8,2) NOT NULL,
   `quantity` int(11) NOT NULL,
@@ -319,7 +319,7 @@ CREATE TABLE `order_items` (
 -- Dumping data for table `order_items`
 --
 
-INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `color`, `price`, `quantity`, `created_at`, `updated_at`) VALUES
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `name`, `color`, `price`, `quantity`, `created_at`, `updated_at`) VALUES
 (1, 1, 12, 'Ryder Dillon', '#ff00ff', '4.00', 1, '2025-03-20 15:04:58', '2025-03-20 15:04:58'),
 (2, 1, 13, 'Ryder Dillon', 'Green', '77.00', 1, '2025-03-20 15:04:58', '2025-03-20 15:04:58'),
 (3, 1, 3, 'Otto Mathews', 'red', '1000.00', 1, '2025-03-20 15:04:58', '2025-03-20 15:04:58'),
@@ -394,9 +394,9 @@ CREATE TABLE `products` (
   `unit_id` bigint(20) UNSIGNED NOT NULL,
   `category_id` bigint(20) UNSIGNED NOT NULL,
   `sub_category_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `product_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `product_price` int(11) NOT NULL,
-  `product_description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `product_image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `product_available_quantity` int(11) NOT NULL,
   `promoted_item` tinyint(1) NOT NULL DEFAULT 0,
@@ -411,7 +411,7 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `unit_id`, `category_id`, `sub_category_id`, `product_name`, `product_price`, `product_description`, `product_image`, `product_available_quantity`, `promoted_item`, `has_varient`, `vat`, `status`, `created_at`, `updated_at`) VALUES
+INSERT INTO `products` (`id`, `unit_id`, `category_id`, `sub_category_id`, `name`, `product_price`, `description`, `product_image`, `product_available_quantity`, `promoted_item`, `has_varient`, `vat`, `status`, `created_at`, `updated_at`) VALUES
 (7, 2, 3, 0, 'Pakistani Exclusive Design Qivilt', 3800, 'Pakistani Exclusive Design Qivilt – A Blend of Tradition & Elegance\r\n\r\nDiscover the beauty of Pakistani Exclusive Design Qivilt, where tradition meets contemporary craftsmanship. Each piece is a work of art, meticulously designed to reflect the rich cultural heritage of Pakistan.\r\n\r\n\r\n✅ Authentic Pakistani Designs – Inspired by classic motifs and intricate patterns.\r\n✅ Premium Quality – Made with the finest materials for durability and elegance.\r\n✅ Unique Handcrafted Touch – Every piece tells a story of skilled artisanship.\r\n✅ Perfect for Every Occasion – Whether casual or formal, Qivilt adds a touch of sophistication.\r\n\r\nExperience timeless style with Pakistani Exclusive Design Qivilt – a true representation of tradition, class, and modern fashion.', '2025-03-2367e033328b02b1742746418.webp', 45, 1, 1, 45, 1, '2025-03-23 10:13:38', '2025-03-23 10:13:38'),
 (8, 2, 3, 0, 'Pakistani Exclusive Design Qivilt', 5000, 'Pakistani Exclusive Design Qivilt – A Blend of Tradition & Elegance\r\n\r\nDiscover the beauty of Pakistani Exclusive Design Qivilt, where tradition meets contemporary craftsmanship. Each piece is a work of art, meticulously designed to reflect the rich cultural heritage of Pakistan.\r\n\r\n\r\n✅ Authentic Pakistani Designs – Inspired by classic motifs and intricate patterns.\r\n✅ Premium Quality – Made with the finest materials for durability and elegance.\r\n✅ Unique Handcrafted Touch – Every piece tells a story of skilled artisanship.\r\n✅ Perfect for Every Occasion – Whether casual or formal, Qivilt adds a touch of sophistication.\r\n\r\nExperience timeless style with Pakistani Exclusive Design Qivilt – a true representation of tradition, class, and modern fashion.', '2025-03-2367e0335e913e11742746462.webp', 45, 1, 1, 45, 1, '2025-03-23 10:14:22', '2025-03-23 10:14:22'),
 (9, 2, 3, 0, 'Pakistani Exclusive Design Qivilt', 6000, 'Pakistani Exclusive Design Qivilt – A Blend of Tradition & Elegance\r\n\r\nDiscover the beauty of Pakistani Exclusive Design Qivilt, where tradition meets contemporary craftsmanship. Each piece is a work of art, meticulously designed to reflect the rich cultural heritage of Pakistan.\r\n\r\n\r\n✅ Authentic Pakistani Designs – Inspired by classic motifs and intricate patterns.\r\n✅ Premium Quality – Made with the finest materials for durability and elegance.\r\n✅ Unique Handcrafted Touch – Every piece tells a story of skilled artisanship.\r\n✅ Perfect for Every Occasion – Whether casual or formal, Qivilt adds a touch of sophistication.\r\n\r\nExperience timeless style with Pakistani Exclusive Design Qivilt – a true representation of tradition, class, and modern fashion.', '2025-03-2367e033766b8db1742746486.jpg', 45, 1, 1, 45, 1, '2025-03-23 10:14:46', '2025-03-23 10:14:46'),
@@ -451,10 +451,10 @@ INSERT INTO `products` (`id`, `unit_id`, `category_id`, `sub_category_id`, `prod
 -- --------------------------------------------------------
 
 --
--- Table structure for table `product_varients`
+-- Table structure for table `product_variants`
 --
 
-CREATE TABLE `product_varients` (
+CREATE TABLE `product_variants` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
   `size_id` bigint(20) UNSIGNED NOT NULL,
@@ -470,10 +470,10 @@ CREATE TABLE `product_varients` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `product_varients`
+-- Dumping data for table `product_variants`
 --
 
-INSERT INTO `product_varients` (`id`, `product_id`, `size_id`, `color_id`, `cost_price`, `price`, `stock`, `sku`, `discount`, `image`, `created_at`, `updated_at`) VALUES
+INSERT INTO `product_variants` (`id`, `product_id`, `size_id`, `color_id`, `cost_price`, `price`, `stock`, `sku`, `discount`, `image`, `created_at`, `updated_at`) VALUES
 (1, 1, 4, 7, 62, 40, 0, 'Eum ut voluptatem N', 85, NULL, '2025-03-20 09:37:42', '2025-03-20 09:37:42'),
 (2, 2, 2, 6, 21, 200, 42, 'zbcv', 4, '2025-03-2067dc397a9d4b71742485882.jpg', '2025-03-20 09:51:22', '2025-03-20 09:51:22'),
 (3, 2, 1, 4, 100, 300, 20, 'vcbn', 4, '2025-03-2067dc397a9e16b1742485882.png', '2025-03-20 09:51:22', '2025-03-20 09:51:22'),
@@ -815,9 +815,9 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `product_varients`
+-- Indexes for table `product_variants`
 --
-ALTER TABLE `product_varients`
+ALTER TABLE `product_variants`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -923,9 +923,9 @@ ALTER TABLE `products`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
--- AUTO_INCREMENT for table `product_varients`
+-- AUTO_INCREMENT for table `product_variants`
 --
-ALTER TABLE `product_varients`
+ALTER TABLE `product_variants`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=184;
 
 --

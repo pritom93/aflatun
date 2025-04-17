@@ -17,7 +17,7 @@ use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Attribute;
 use App\Models\AttrValue;
-use App\Models\ProductVarient;
+use App\Models\ProductVariant;
 use App\Models\Size;
 
 class AdminController extends Controller
@@ -46,7 +46,7 @@ class AdminController extends Controller
         if (!$found) {
             $cart[] = [
                 'product_id' => $request->product_id,
-                'product_name' => $request->product_name,
+                'name' => $request->name,
                 'price' => $request->price,
                 'color' => $request->color,
                 'quantity' => $request->quantity,
@@ -72,7 +72,7 @@ class AdminController extends Controller
     
     public function indexFontPage()
     {
-        $products = Product::with(['product_varients.color', 'product_varients.size'])->paginate(12);
+        $products = Product::with(['product_variants.color', 'product_variants.size'])->paginate(12);
         // return $products;
        
         return view('font.product.index_font_page', compact('products'));
@@ -191,10 +191,10 @@ class AdminController extends Controller
         }
         Category::create([
             'category_name' => $formData['cname'],
+            'slug' => Str::slug($formData['cname']),
             'category_native_name' =>  $formData['cn_name'],
             'parent_categroy' => (int) $formData['parent'] ?? 0,
             'icon' => $image_name,
-            'slug' => Str::slug($formData['cname']),
             'home_view' => '0',
             'status' => $formData['cstatus'] == 'active' ? true : false,
         ]);
@@ -335,17 +335,21 @@ class AdminController extends Controller
             }
             $combinations = json_decode($request->input('combinations'), true);
             $product = Product::create([
+                'designer_id' => (int)$request->DesinerNameID,
                 'unit_id' => (int)$request->UnitIDName,
                 'category_id' => (int)$request->CategoryIDName,
-                'sub_category_id' => 0,
-                'product_name' => $request->ProducIDtName,
-                'product_price' => (int)$request->ProductIDPrice,
-                'product_description' => $request->DescriptionIDProduct,
-                'product_image' => $image_name,
-                'product_available_quantity' => (int)$request->ProductIDQNTY,
+                'sub_category_id' => (int)$request->subCategoryName,
+                'brand_id' => (int)$request->brandName,
+                'name' => $request->ProducIDtName,
+                'slug' => Str::slug($request->ProducIDtName),
+                'price' => (int)$request->ProductIDPrice,
+                'description' => $request->DescriptionIDProduct,
+                'image' => $image_name,
+                'available_quantity' => (int)$request->ProductIDQNTY,
                 'promoted_item' => $request->subject == 'yes' ? true : false,
                 'has_varient' => count($combinations) > 0 ? 1 : 0,
-                'vat' => $request->ProductVAT ?? 2.5
+                'vat' => $request->ProductVAT ?? 2.5,
+                'status' => (int)$request->statusID,
             ]);
 
             if (count($combinations) > 0) {
@@ -360,7 +364,7 @@ class AdminController extends Controller
                         $variant = date('Y-m-d') . uniqid() . time() . '.' . $extension;
                         $image->move(public_path('images/products/variant'), $variant);
                     }
-                    ProductVarient::create([
+                    ProductVariant::create([
                         'product_id' => $product->id,
                         'size_id' => $value['sizeId'],
                         'color_id' => $value['colorId'],
@@ -369,7 +373,8 @@ class AdminController extends Controller
                         'stock' => $value['stock'],
                         'sku' => $value['sku'],
                         'discount' => $value['discount'],
-                        'image' => $variant
+                        'image' => $variant,
+                        'display_status' => $value['display'],
                     ]);
                 }
             }
@@ -397,7 +402,7 @@ class AdminController extends Controller
         $attrvalsize = AttrValue::where('attrname_id',1)->get();
         $attrvalcolor = AttrValue::where('attrname_id',2)->get();
         $id = Product::find($id)->first();
-        $vrid = ProductVarient::where('product_id',$id)->get();
+        $vrid = ProductVariant::where('product_id',$id)->get();
         return view('backend.pages.products.product_edit', [
             'products' => $id,
             'units' => $unit,
@@ -428,9 +433,9 @@ class AdminController extends Controller
         //     $products_id->update([
         //         'unit_id' => (int)$request->unit,
         //         'category_id' => (int)$request->category_id,
-        //         'product_name' => $request->name,
+        //         'name' => $request->name,
         //         'product_price' => (int)$request->price,
-        //         'product_description' => $request->des,
+        //         'description' => $request->des,
         //         'product_image' => $image_name,
         //         'product_available_quantity' => (int)$request->qty,
         //         'product_size' => $request->size,
@@ -462,9 +467,10 @@ class AdminController extends Controller
             'unit_id' => (int)$request->UnitIDName,
             'category_id' => (int)$request->CategoryIDName,
             'sub_category_id' => 0,
-            'product_name' => $request->ProducIDtName,
+            'name' => $request->ProducIDtName,
+            'slug' => Str::slug($request->ProducIDtName),
             'product_price' => (int)$request->ProductIDPrice,
-            'product_description' => $request->DescriptionIDProduct,
+            'description' => $request->DescriptionIDProduct,
             'product_image' => $image_name,
             'product_available_quantity' => (int)$request->ProductIDQNTY,
             'promoted_item' => $request->subject == 'yes' ? true : false,
@@ -489,7 +495,7 @@ class AdminController extends Controller
 
                 // Find existing variant or create new
                 
-                $variant = ProductVarient::updateOrCreate(
+                $variant = ProductVariant::updateOrCreate(
                     ['product_id' => $product->id,
                      'size_id' => $value['sizeId'], 
                      'color_id' => $value['colorId']
@@ -500,7 +506,7 @@ class AdminController extends Controller
                         'stock' => $value['stock'],
                         'sku' => $value['sku'],
                         'discount' => $value['discount'],
-                        'image' => $variantImage ?? ProductVarient::where([
+                        'image' => $variantImage ?? ProductVariant::where([
                             'product_id' => $product->id, 
                             'size_id' => $value['sizeId'], 
                             'color_id' => $value['colorId']
@@ -555,10 +561,11 @@ class AdminController extends Controller
             }
             Brand::create([
                 'name' => $request->name,
-                'woner' => $request->woner,
+                'slug' => Str::slug($request->name),
+                'owner' => $request->woner,
                 'phone' => $request->phone,
                 'address' => $request->address,
-                'product_name' => $request->product_name,
+                'name' => $request->name,
                 'image' => $image_name,
             ]);
 
@@ -566,6 +573,18 @@ class AdminController extends Controller
         } catch (\Throwable $th) {
             return response()->json($th);
         }
+    }
+    public function removeCartItem(Request $request)
+    {
+        $cart = Session::get('cart', []);
+        $id = $request->id;
+        $colorid = $request->colorid;
+        $sizeid = $request->sizeid;
+        $cart = array_filter($cart, function($item) use ($id, $colorid, $sizeid) {
+            return !($item['product_id'] == $id && $item['color'] == $colorid && $item['size'] == $sizeid);
+        });
+        Session::put('cart', $cart);
+        return response()->json(['message' => 'Product removed from cart!']);
     }
     public function viewBrands()
     {
@@ -598,7 +617,7 @@ class AdminController extends Controller
                 'woner' => $request->woner,
                 'phone' => $request->phone,
                 'address' => $request->address,
-                'product_name' => $request->product_name,
+                'name' => $request->name,
                 'image' => $image_name,
             ]);
             return response()->json("Updated" . $request->id);
@@ -645,6 +664,7 @@ class AdminController extends Controller
             } else {
                 Color::create([
                     'color_name' => $request->name,
+                    'slug' => Str::slug($request->name),
                     'color_code' => $request->id
                 ]);
                 response()->json(['status' => 'success', 'message' => 'Color Added Successfully']);
@@ -721,7 +741,7 @@ class AdminController extends Controller
                 Attribute::create([
                     'name' => $request->name,
                     'native_name' => $request->native,
-                    'slug' => str::slug($request->name),
+                    'slug' => Str::slug($request->name),
                     'description' => $request->des,
                 ]);
                 return response()->json("Attribute Added SuccessFully");
@@ -897,7 +917,8 @@ class AdminController extends Controller
                 ], 422);
             } else {
                 Size::create([
-                    'size' => $request->name,
+                    'size_name' => $request->name,
+                    'slug' => Str::slug($request->name),
                     'size_code' => $request->id
                 ]);
                 response()->json(['status' => 'success', 'message' => 'Size Added Successfully']);
@@ -924,7 +945,8 @@ class AdminController extends Controller
                 ], 422);
             }
             $updateid->update([
-                'size' => $request->name,
+                'size_name' => $request->name,
+                'slug' => Str::slug($request->name),
                 'size_code' => $request->SizeCode
             ]);
             return response()->json(["status" => "success", "message" => "Color Update Successfully"]);

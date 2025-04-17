@@ -15,8 +15,8 @@
                 <li class="nav-item"><a class="nav-link" href="{{url('/gallery')}}">Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{url('/fashion')}}">Fashion</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{url('/contuct')}}">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{url('/login_user')}}">Sign In</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{url('/signup_user')}}">Sign Up</a></li>
+                {{-- <li class="nav-item"><a class="nav-link" href="{{url('/login_user')}}">Sign In</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{url('/signup_user')}}">Sign Up</a></li> --}}
                 <li class="nav-item">
                     <input type="text" class="form-control" placeholder="Search" style="border-radius: 20px;">
                 </li>
@@ -27,11 +27,32 @@
                         </span>
                     </a>
                 </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<!-- Product Section -->
-<section class="new-content">
-    
-</section>
+
+            @auth
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                        <img src="{{ asset('images/users/' . (auth()->user()->image ?? 'default.png')) }}" alt="Profile" class="rounded-circle me-2" width="32" height="32">
+                        {{ auth()->user()->name }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="{{ url('/user/profile') }}">My Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/user/orders') }}">My Orders</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url('/logout') }}">Logout</a></li>
+                    </ul>
+                </li>
+            @else
+                <li class="nav-item">
+                    <a class="nav-link text-warning fw-bold" href="{{ url('/login_user') }}">
+                        <i class="fas fa-user-lock me-1"></i> Login
+                    </a>
+                </li>
+            @endauth
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Product Section -->
+            <section class="new-content">
+                
+            </section>

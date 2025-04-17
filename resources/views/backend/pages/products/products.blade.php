@@ -27,39 +27,61 @@ Dashboard
             <div class="card-body">
                 <form id="combinationForm">
                     <div class="form-row mb-4">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-2">
                             <label for="inputAddress">Product name</label>
                             <input class="form-control" type="text" id="ProductName" name="ProducIDtName">
                         </div>
-                        <div class="form-group col-md-4">
-                            <label for="category">Category</label>
+                        <div class="form-group col-md-2">
+                            <label for="brandName">Brand</label>
+                            <select class="form-control" id="brandName" name="brandName">                             
+                                <option value="">Easy</option>
+                                <option value="">Shant</option>
+                                <option value="">Cline</option>                               
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="CategoryName">Category</label>
                             <select class="form-control" type="number" id="CategoryName" name="CategoryIDName">
                                 @foreach ($categories as $category)
                                 <option value="{{$category->id}}">{{$category->category_name}}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group col-md-4">
-                            <label for="inputUnit">Unit</label>
+                        <div class="form-group col-md-2">
+                            <label for="subCategoryName">Subcategory</label>
+                            <select class="form-control" id="subCategoryName" name="subCategoryName">                             
+                                <option value="">polister</option>
+                                <option value="">Shant</option>
+                                <option value="">Cline</option>                               
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="UnitName">Unit</label>
                             <select class="form-control" id="UnitName" name="UnitIDName">
                                 @foreach ($units as $unit)
                                 <option value="{{$unit->id}}">{{$unit->unit_name}}</option>
                                 @endforeach
                             </select>
                         </div>
-                        
+                        <div class="form-group col-md-2">
+                            <label for="DesinerNameID">Desiner?</label>
+                            <select class="form-control" id="DesinerNameID" name="DesinerNameID">                             
+                                <option value="0">None</option>                                                    
+                            </select>
+                        </div>                       
                     </div>
+
 
                     <div id="combinationsContainer">
                         <!-- First Row (Template Row) -->
                         <div class="form-row mb-4 combination-row">
                             <!-- Size -->
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-1">
                                 <label>Size</label>
                                 <select class="form-control size-select">
                                     <option value="">Select Size</option>
                                     @foreach ($sizes as $value)
-                                    <option value="{{$value->id}}">{{$value->size}}</option>
+                                    <option value="{{$value->id}}">{{$value->size_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -99,6 +121,14 @@ Dashboard
                                 <label>Variant Image</label>
                                 <input type="file" class="form-control vrimage-input" placeholder="Image This Color">
                             </div>
+                            <div class="form-group col-md-1">
+                                <label>Display?</label>
+                                <select class="form-control display-select">
+                                    <option value="">Select Size</option>                                  
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>                                   
+                                </select>
+                            </div>
                             <!-- Remove Button -->
                             <div class="form-group col-md-1 d-flex align-items-end">
                                 <button class="badge badge-danger removeCombination" type="button">X</button>
@@ -121,11 +151,18 @@ Dashboard
                             <label for="category">QTY</label>
                             <input class="form-control" type="number" id="ProductQNTY" name="ProductIDQNTY">
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                             <label for="category">Promot</label>
                             <select class="form-control" id="ProductPromoted" name="subject">
                                 <option value="yes">YES</option>
                                 <option value="no">NO</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="category">Status</label>
+                            <select class="form-control" id="statusID" name="statusID">
+                                <option value="1">YES</option>
+                                <option value="0">NO</option>
                             </select>
                         </div>
                     </div>
@@ -153,7 +190,7 @@ Dashboard
 @push('backend_script')
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        let combinationArray = [{ colorId: '', sizeId: '', price: 0, stock: 0, sku: 0, costing: 0, discount: 0, variantImage: '', }]; // Initial blank object
+        let combinationArray = [{ colorId: '', sizeId: '', price: 0, stock: 0, sku: 0, costing: 0, discount: 0, variantImage: '', display: '' }]; // Initial blank object
 
     function updateCombinationArray() {
         combinationArray = []; // Reset array
@@ -166,9 +203,10 @@ Dashboard
             let sku = $(this).find(".sku-input").val() || 0;
             let discount = $(this).find(".discount-input").val() || 0;
             let costing = $(this).find(".costing-input").val() || 0;
+            let display = $(this).find(".display-select").val() || '';
             let variantImage = $(this).find(".vrimage-input").val() || '';
 
-            combinationArray.push({ sizeId, colorId, price, stock, sku, discount, costing, variantImage });
+            combinationArray.push({ sizeId, colorId, price, stock, sku, discount, costing, display, variantImage });
         });
 
         console.log(combinationArray); // Debugging
@@ -192,7 +230,7 @@ Dashboard
         $("#combinationsContainer").append(newRow);
 
         // Push blank object to array
-        combinationArray.push({ colorId: '', sizeId: '', price: 0, stock: 0, sku: 0, discount: 0, costing: 0, variantImage: ''});
+        combinationArray.push({ colorId: '', sizeId: '', price: 0, stock: 0, sku: 0, discount: 0, costing: 0,display: '', variantImage: ''});
 
         console.log(combinationArray); // Debugging
     });
@@ -220,6 +258,7 @@ Dashboard
             let sku = $(this).find(".sku-input").val() || 0;
             let discount = $(this).find(".discount-input").val() || 0;
             let costing = $(this).find(".costing-input").val() || 0;
+            let display = $(this).find(".display-select").val() || '';
             let fileInput = $(this).find(".vrimage-input")[0]; // Get file input element
             let variantImage = fileInput.files.length > 0 ? fileInput.files[0] : null;
 
@@ -231,6 +270,7 @@ Dashboard
                     sku: sku,
                     discount: discount,
                     costing: costing,
+                    display: display,
                     variantImage: variantImage ? `variant_image_${index}` : ""
                 };
 
@@ -244,9 +284,9 @@ Dashboard
 
         // Append JSON data to FormData
         formData.append("combinations", JSON.stringify(combinationArray));
-        for (var pair of formData.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
+        // for (var pair of formData.entries()) {
+        //     console.log(pair[0]+ ', ' + pair[1]); 
+        // }
         // return false;
         $.ajax({
                 url: "{{url('admins/add/product')}}",

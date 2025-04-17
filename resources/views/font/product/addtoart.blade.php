@@ -57,19 +57,22 @@
                         </tr>
                     </thead>
                     <tbody id="cart-items">
-                        @php $cart = Session::get('cart', []); @endphp
+                        @php 
+                            $cart = Session::get('cart', []);
+                        @endphp
                         @foreach ($cart as $item)
                         @php
-                        $colorName = \App\Models\Color::where('id', $item['color'])->value('color_name');
-                        $sizeName = \App\Models\Size::where('id', $item['size'])->value('size');
-                    @endphp
-                            <tr data-id="{{ $item['product_id'] }}">
+                            $colorName = \App\Models\Color::where('id', $item['color'])->value('color_name');
+                            $sizeName = \App\Models\Size::where('id', $item['size'])->value('size_name');
+                        @endphp
+                    {{-- @dd($item); --}}
+                            <tr data-id="{{ $item['product_id'] }}" data-colorid="{{ $item['color'] }}" data-sizeid="{{ $item['size'] }}">
                                 <td>
-                                    <img src="{{ $item['image'] ?? asset('images/products/variant/default-product.jpg') }}" alt="{{ $item['product_name'] }}" width="50">
+                                    <img src="{{ $item['image'] ?? asset('images/products/variant/default-product.jpg') }}" alt="{{ $item['name'] }}" width="50">
                                 </td>
-                                <td>{{ $item['product_name'] }}
+                                <td>{{ $item['name'] }}
                                 </br><span class="unit-price" data-price="{{ $item['price'] }}">BDT:{{$item['price']}} </span></td>                                                  
-                                <td>{{ $colorName ?? 'N/A' }}</td>                   
+                                <td>{{ $colorName ?? 'N/A' }} </td>                   
                                 <td>{{ $sizeName ?? 'N/A' }}</td>                   
                                 <td class="price" id="price-{{ $item['product_id'] }}">
                                     BDT: {{ $item['price'] * $item['quantity'] }}
@@ -95,12 +98,12 @@
         <div class="col-md-3 row">
             <!-- Address Section -->
             <div class="card p-3 mb-3 information">
-                <input class="form-control customerName px-2" type="text" placeholder="Name"></input>
-                <input class="form-control emailaddress" type="email" placeholder="Email"></input>
-                <input class="form-control phoneNumber" type="tel" placeholder="Phone Number"></input>
-                <input class="form-control Receiving-Time" type="time" placeholder="Receiving Time"></input>
+                <p class="form-control customerName px-2">{{ Auth::user()->name }}</p>
+                <p class="form-control emailaddress">{{ Auth::user()->email }}</p>
+                <p class="form-control phoneNumber">{{ Auth::user()->phone }}</p>
                 <h5>📍 Shipping Address</h5>
                 <textarea id="shipping-address" class="form-control" placeholder="Enter your address"></textarea>
+                <input class="form-control Receiving-Time" type="date" placeholder="Receiving Time"></input>
             </div>
             <button type="button" class="btn btn-success informationbutton">Shipping Information</button>
 
@@ -165,6 +168,28 @@
     // Remove Item
     $(".remove-btn").click(function() {
         $(this).closest("tr").remove();
+        // item remove from cart
+        let id = $(this).closest("tr").data("id");
+        let colorid = $(this).closest("tr").data("colorid");
+        let sizeid = $(this).closest("tr").data("sizeid");
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
+        $.ajax({
+            url: "{{url('/remove-cart')}}",
+            type: "POST",
+            data: {
+                id: id,
+                colorid: colorid,
+                sizeid: sizeid
+            },
+            success: function(response) {
+                alert(response.message);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
         updateTotal();
     });
 
@@ -204,13 +229,15 @@
 
         $("#cart-items tr").each(function() {
             let id = $(this).data("id");
+            let cID = $(this).data("colorid");
+            let sID = $(this).data("sizeid");
             let product = $(this).find("td:eq(1)").text(); 
             let color = $(this).find("td:eq(2)").text(); 
             let size = $(this).find("td:eq(3)").text(); 
             let price = parseFloat($(this).find(".price").text().replace(/[^\d.]/g, ""));
             let quantity = parseInt($(this).find(".quantity").val());
 
-            cartItems.push({ id, product, color, size, price, quantity });
+            cartItems.push({ id, product, color, size, price, quantity,cID,sID });
         });
 
         let orderData = {
@@ -237,6 +264,8 @@
             data: JSON.stringify(orderData),
             contentType: "application/json",
             success: function(response) {
+                console.log(response);
+                return false;
                 if (response.cart_cleared) {
                     $("#cart-items").empty(); 
                     $("#subtotal").text("BDT: 0.00");
@@ -272,7 +301,7 @@
 
 {{-- {
     "product_id": "2",
-    "product_name": "Galena Pacheco",
+    "name": "Galena Pacheco",
     "price": "300",
     "color": "gray",
     "quantity": "1",

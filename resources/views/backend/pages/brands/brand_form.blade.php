@@ -94,7 +94,7 @@ Dashboard
                 BrandsData.append('woner', $('#BrandWoner').val());
                 BrandsData.append('phone', $('#WonerPhone').val());
                 BrandsData.append('address', $('#WonerContuctAdress').val());
-                BrandsData.append('product_name', $('#ProductName').val());
+                BrandsData.append('name', $('#ProductName').val());
                 const fileInput = document.getElementById("imageUpload");
                  const file = fileInput.files[0];
                  BrandsData.append("image", file);

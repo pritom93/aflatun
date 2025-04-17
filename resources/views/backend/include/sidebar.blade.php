@@ -298,7 +298,7 @@
                         <a href="{{url('admins/client-view')}}"> Clients </a>
                     </li>
                     <li>
-                        <a href="element_avatar.html"> Avatar </a>
+                        <a href="{{url('admins/view-designer')}}"> Designer </a>
                     </li>
                     <li>
                         <a href="element_badges.html"> Badges </a>
@@ -558,7 +558,7 @@
                             <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
-                        <span>Users</span>
+                        <span>Fashion</span>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -570,7 +570,10 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="users" data-parent="#accordionExample">
                     <li>
-                        <a href="user_profile.html"> Profile </a>
+                        <a href="{{url('admins/new-designer')}}"> Desiners </a>
+                    </li>
+                    <li>
+                        <a href="user_profile.html"> Event </a>
                     </li>
                     <li>
                         <a href="user_account_setting.html"> Account Settings </a>

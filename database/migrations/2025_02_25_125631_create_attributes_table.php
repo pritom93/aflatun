@@ -16,8 +16,8 @@ class CreateAttributesTable extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('native_name')->nullable();
             $table->string('slug')->nullable();
+            $table->string('native_name')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });

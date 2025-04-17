@@ -78,7 +78,7 @@ Dashboard
                     <div class="name">Product Name</div>
                     <div class="value">
                         <div class="input-group">
-                            <input class="input--style-5" type="text" value="{{$brands->product_name}}" id="ProductName"
+                            <input class="input--style-5" type="text" value="{{$brands->name}}" id="ProductName"
                                 name="ProductIDName">
                         </div>
                     </div>
@@ -102,7 +102,7 @@ Dashboard
                 BrandsData.append('woner', $('#BrandWoner').val());
                 BrandsData.append('phone', $('#WonerPhone').val());
                 BrandsData.append('address', $('#WonerContuctAdress').val());
-                BrandsData.append('product_name', $('#ProductName').val());
+                BrandsData.append('name', $('#ProductName').val());
                 BrandsData.append('id', $('#brandsHiddenID').val());
                 const fileInput = document.getElementById("imageUpload");
                  const file = fileInput.files[0];

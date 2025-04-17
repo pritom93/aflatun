@@ -10,9 +10,9 @@ Category List
 @section('content')
 <div class="col-md-12 col-lg-12 ">
     <div class="d-flex justify-content-between py-2">
-        <h2 class="text-center">ADMINS LIST</h2>
+        <h2 class="text-center">CATEGORY LIST</h2>
         <a href="" class="btn btn-primary">
-            NEW ADMINS</a>
+            NEW</a>
     </div>
     @if (session('status'))
     <div class="alert alert-success">

@@ -7,20 +7,13 @@ use App\Models\Color;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductVarient extends Model
+class ProductVariant extends Model
 {
     use HasFactory;
-    protected $table = 'product_varients';
+    protected $table = 'product_variants';
     protected $fillable = [
-        'product_id',
-        'size_id',
-        'color_id',
-        'cost_price',
-        'price',
-        'stock',
-        'sku',
-        'discount',
-        'image'
+       'product_id', 'size_id', 'color_id', 'cost_price', 'price',
+        'stock', 'sku', 'discount', 'image', 'display_status',
     ];
     public function productsCall()
     {

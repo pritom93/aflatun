@@ -15,14 +15,17 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('unit_id');
+            $table->unsignedBigInteger('designer_id');
+            $table->foreignId('unit_id')->default(0);
             $table->foreignId('category_id');
             $table->foreignId('sub_category_id')->nullable();
-            $table->string('product_name');
-            $table->integer('product_price');
-            $table->text('product_description')->nullable();
-            $table->string('product_image');
-            $table->integer('product_available_quantity');
+            $table->foreignId('brand_id')->nullable();
+            $table->string('name');
+            $table->string('slug')->nullable();
+            $table->integer('price');
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->integer('available_quantity');
             $table->boolean('promoted_item')->default(false);
             $table->boolean('has_varient')->default(false);
             $table->double('vat')->default(2.5);

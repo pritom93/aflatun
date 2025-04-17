@@ -4,17 +4,17 @@
 @section('content')
 <div class="row">
     <!-- Left Sidebar (Advertisement) -->
-    <div class="col-md-2">
+    {{-- <div class="col-md-2">
         <div class="menu p-3 bg-light border rounded">
-            {{-- <h5>Menu</h5> --}}
+            <h5>Menu</h5>
             <ul class="list-group">
-                {{-- <li class="list-group-item"><a href="#">Home</a></li>
+                <li class="list-group-item"><a href="#">Home</a></li>
                 <li class="list-group-item"><a href="#">Categories</a></li>
                 <li class="list-group-item"><a href="#">Offers</a></li>
-                <li class="list-group-item"><a href="#">Contact</a></li> --}}
+                <li class="list-group-item"><a href="#">Contact</a></li>
             </ul>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Center Content (Products) -->
     <div class="col-md-8">
@@ -26,17 +26,17 @@
                     <!-- Product Image -->
                     <div class="image-container">
                         <img id="product-image-{{$product->id}}" 
-                            src="{{ asset('images/products/'.$product->product_image) }}" 
+                            src="{{ asset('images/products/'.$product->image) }}" 
                             class="zoom-image"
                             alt="Product Image">
                     </div>
                     
                     <div class="product-details mt-3 d-flex flex-column" style="flex-grow: 1;">
                         <h5 class="product-title" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                            {{$product->product_name}}
+                            {{$product->name}}
                         </h5>
                         <p class="product-description" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
-                            {{Str::limit($product->product_description, 60, '...')}}
+                            {{Str::limit($product->description, 60, '...')}}
                         </p>
                         
                         <!-- Product Price -->
@@ -50,7 +50,7 @@
                         <a href="{{url('view-products-details/'.$product->id)}}">
                             <button class="btn btn-add-cart w-100 mt-2 btn-secondary add-to-cart"
                                     data-product-id="{{ $product->id }}"
-                                    data-product-name="{{ $product->product_name }}"
+                                    data-product-name="{{ $product->name }}"
                                     data-price="{{ $product->product_variation->first()->price ?? 0 }}"
                                     data-color="">
                                 BUY NOW
@@ -90,13 +90,13 @@
     </div>
 
     <!-- Right Sidebar (Advertisement) -->
-    <div class="col-md-2">
+    {{-- <div class="col-md-2">
         <div class="advertisement p-3 bg-light border rounded">
-            {{-- <h5>Advertisement</h5>
+            <h5>Advertisement</h5>
             <img src="{{ asset('images/ads/ad-banner.jpg') }}" style="width: 100%; height: 200px;" alt="Ad Banner">
-            <p class="mt-2">Check out our latest offers!</p> --}}
+            <p class="mt-2">Check out our latest offers!</p>
         </div>
-    </div>
+    </div> --}}
 </div>
 <!-- jQuery for changing product image and price -->
 @endsection
@@ -213,7 +213,7 @@
     //             data: {
     //                 _token: "{{ csrf_token() }}",
     //                 product_id: productId,
-    //                 product_name: productName,
+    //                 name: productName,
     //                 price: price,
     //                 color: color,
     //                 quantity: 1

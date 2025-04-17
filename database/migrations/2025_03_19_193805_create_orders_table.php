@@ -15,16 +15,18 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone');
-            $table->string('email');
-            $table->string('address');
-            $table->string('payment_method');
-            $table->time('receiving_time')->nullable(); 
-            $table->decimal('shipping_charge');
-            $table->decimal('subtotal');
-            $table->decimal('tax');
-            $table->decimal('total');
+            $table->foreignId('user_id');
+            $table->string('payment_method')->comment('1=Cash on delivery, 2=Online payment, 3=Bank transfer, 4=Cheque');
+            $table->tinyInteger('payment_status')->default(0);
+            $table->double('shipping_charge')->default(0.00);
+            $table->integer('discount')->default(0);
+            $table->double('subtotal');
+            $table->double('tax');
+            $table->double('total', 8, 4);
+            $table->tinyInteger('delivery_status')->default(0);
+            $table->string('delivery_date')->nullable(); 
+            $table->tinyInteger('order_status')->default(0);     
+            $table->string('order_date');
             $table->timestamps();
         });
     }

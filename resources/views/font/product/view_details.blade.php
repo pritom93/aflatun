@@ -98,13 +98,13 @@
     <div class="row">
         <!-- Product Images -->
         {{-- <div class="col-md-8">
-            <img id="product-image-{{$products->id}}" src="{{ asset('images/products/'.$products->product_image) }}"
+            <img id="product-image-{{$products->id}}" src="{{ asset('images/products/'.$products->image) }}"
                 class="img-fluid rounded">
         </div> --}}
         <div class="col-md-8">
             <div class="image-magnifier">
                 <img id="product-image-{{$products->id}}" 
-                     src="{{ asset('images/products/'.$products->product_image) }}" 
+                     src="{{ asset('images/products/'.$products->image) }}" 
                      class="img-fluid rounded">
             </div>
         </div>
@@ -112,7 +112,7 @@
         <!-- Product Details -->
         <div class="col-md-4">
             <div class="product-details mt-3">
-                <h5 class="product-title">{{$products->product_name}}</h5>
+                <h5 class="product-title">{{$products->name}}</h5>
                 <div class="product-rating">★★★★☆ (4.5)
                     <br>
                     <strong class="sku">STOCK:</strong> <span class="skus" id="product-stock-{{$products->id}}">{{
@@ -143,14 +143,14 @@
 
                 <!-- Buttons -->
                 <button class="btn btn-add-cart w-100 mt-2 btn-primary add-to-cart"
-                    data-product-id="{{ $products->id }}" data-product-name="{{ $products->product_name }}"
+                    data-product-id="{{ $products->id }}" data-product-name="{{ $products->name }}"
                     data-price="{{ $products->product_variation->first()->price ?? 0 }}" data-color="">
                     Add to Cart
                 </button>
                 <a href="{{url('/cart')}}"><button class="btn btn-buy-now w-100 mt-2 btn-success">Buy Now</button><a>
             </div>
             </br>
-            <p class="descriptionp">{{$products->product_description}}</p>
+            <p class="descriptionp">{{$products->description}}</p>
 
         </div>
     </div>
@@ -165,7 +165,7 @@ $(document).ready(function() {
     const productUri = "{{url('images/products/variant')}}/";
 
     async function findData(colorId, sizeId) {
-        const variants = @json($products->product_varients);
+        const variants = @json($products->product_variants);
         return variants.find(variant => variant.color_id == colorId && variant.size_id == sizeId) || null;
     }
 
@@ -175,7 +175,7 @@ $(document).ready(function() {
         var productId = $(this).data("product-id");
 
         // Get all variations for selected color
-        const filterVariation = @json($products->product_varients).filter(item => item.color_id == selectedColor);
+        const filterVariation = @json($products->product_variants).filter(item => item.color_id == selectedColor);
         
         if (filterVariation.length > 0) {
             $("#product-image-" + productId).attr("src", productUri + filterVariation[0]['image']);
@@ -190,7 +190,7 @@ $(document).ready(function() {
             sizeButtons += `<button class="size-btn me-2 border rounded px-3 py-1 mx-2 btn-outline-info" 
                                data-product-id="${productId}"
                                data-size="${data.id}">
-                               ${data.size}
+                               ${data.size_name}
                            </button>`;
         });
 
@@ -245,7 +245,7 @@ $(document).ready(function() {
             data: {
                 _token: "{{ csrf_token() }}",
                 product_id: productId,
-                product_name: productName,
+                name: productName,
                 price: price,
                 color: color,
                 size: size,
