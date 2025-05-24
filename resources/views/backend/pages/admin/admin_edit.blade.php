@@ -1,189 +1,182 @@
-@extends('backend.master.masterback');
+@extends('backend.master.masterback')
+
 @push('link')
-<link href="{{asset('form/vendor/mdi-font/css/material-design-iconic-font.min.css')}}" rel="stylesheet" media="all">
-<link href="{{asset('form/vendor/font-awesome-4.7/css/font-awesome.min.css')}}" rel="stylesheet" media="all">
-<!-- Font special for pages-->
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i"
-    rel="stylesheet">
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+<link href="{{ asset('form/vendor/font-awesome-4.7/css/font-awesome.min.css') }}" rel="stylesheet">
 
-<!-- Vendor CSS-->
-<link href="{{asset('form/vendor/select2/select2.min.css')}}" rel="stylesheet" media="all">
-<link href="{{asset('form/vendor/datepicker/daterangepicker.css')}}" rel="stylesheet" media="all">
+<!-- Custom CSS -->
+<style>
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        padding: 30px;
+        background-color: #fff;
+    }
 
-<!-- Main CSS-->
-<link href="{{asset('form/css/main.css')}}" rel="stylesheet" media="all">
+    .form-row {
+        margin-bottom: 20px;
+    }
+
+    .name {
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .input-group input,
+    .input-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .input-group input[type="file"] {
+        padding: 8px;
+    }
+
+    select {
+        background-color: #fff;
+        height: 50px;
+    }
+
+    .form-row img {
+        margin-bottom: 15px;
+        border-radius: 50%;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        background-color: #e63946;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .radio-container {
+        display: inline-block;
+        margin-right: 20px;
+    }
+</style>
 @endpush
+
 @section('title')
 Dashboard
 @endsection
+
 @section('content')
-<div class="col-xl-12 col-md-12 col-sm-12 col-12">
+<div class="container mt-5">
+    <div class="card">
+        <h2 class="mb-4">Edit Admin</h2>
+        <form id="AdminFormUpdate" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" id="hiddenAdminID" value="{{ $admins_data->id }}">
 
-
-    <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
-        <div class="wrapper wrapper--w790">
-            <div class="card card-5">
-                <div class="card-heading">
-                    <h2 class="title">NEW ADMIN REGISTRATION</h2>
-                </div>
-                <div class="card-body">
-                    <form id="AdminFormUpdate">
-                        @csrf
-                        <div class="form-row">
-                            <div class="name">Name</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <input class="input--style-5" type="text" value="{{$admins_data->name}}"
-                                        id="adminname" name="name">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="name">Email</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <input class="input--style-5" type="email" value="{{$admins_data->email}}"
-                                        id="adminemail" name="email">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="name">Password</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <input class="input--style-5" type="password" placeholder="Password is not Showing"
-                                        id="adminpassword" name="password">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="name">Admin Area</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <input class="input--style-5" type="number" value="{{$admins_data->admin_area_id}}"
-                                        id="adminarea" name="adminarea">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="name">Role</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <input type="hidden" id="hiddenAdminID" value="{{$admins_data->id}}">
-                                    <input class="input--style-5" type="number" value="{{$admins_data->role_id}}"
-                                        id="adminrole" name="adminrole">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <img src="{{asset('images/admins/'.$admins_data->avatar)}}" alt="Profile Picture"
-                                class="rounded-circle" width="100" height="100">
-
-                            <div class="name">Avatar</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <input class="input--style-5" type="file" id="adminavatar" name="avatar">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="name">Status</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <div class="rs-select2 js-select-simple select--no-search">
-                                        <select id="adminstatus" name="subject">
-                                            <option disabled="disabled" selected="selected">Choose option</option>
-                                            <option value="1">Active</option>
-                                            <option value="0">Inactive</option>
-                                        </select>
-                                        <div class="select-dropdown"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row p-t-20">
-                            <label class="label label--block">Are you sure?</label>
-                            <div class="p-t-15">
-                                <label class="radio-container m-r-55">Yes
-                                    <input type="radio" checked="checked" name="exist">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="radio-container">No
-                                    <input type="radio" name="exist">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <button onclick="adminRegistration()" class="btn btn--radius-2 btn--red"
-                                type="submit">Update</button>
-                        </div>
-                    </form>
+            <div class="form-row">
+                <label class="name">Name</label>
+                <div class="input-group">
+                    <input type="text" id="adminname" name="name" value="{{ $admins_data->name }}">
                 </div>
             </div>
-        </div>
+
+            <div class="form-row">
+                <label class="name">Email</label>
+                <div class="input-group">
+                    <input type="email" id="adminemail" name="email" value="{{ $admins_data->email }}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="name">Password</label>
+                <div class="input-group">
+                    <input type="password" id="adminpassword" name="password" placeholder="Password is not shown">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="name">Admin Area</label>
+                <div class="input-group">
+                    <input type="number" id="adminarea" name="adminarea" value="{{ $admins_data->admin_area_id }}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="name">Role</label>
+                <div class="input-group">
+                    <select id="adminrole" name="adminrole">
+                        <option value="{{ $admins_data->role_id}}">{{ $admins_data->role_id }}</option>
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="name">Avatar</label><br>
+                <img src="{{ asset('images/admins/' . $admins_data->avatar) }}" width="100" height="100" alt="Avatar">
+                <div class="input-group">
+                    <input type="file" id="adminavatar" name="avatar">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="name">Status</label>
+                <div class="input-group">
+                    <select id="adminstatus" name="status">
+                        <option value="1" {{ $admins_data->status == 1 ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ $admins_data->status == 0 ? 'selected' : '' }}>Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="name">Are you sure?</label>
+                <div>
+                    <label class="radio-container">Yes
+                        <input type="radio" name="exist" checked>
+                    </label>
+                    <label class="radio-container">No
+                        <input type="radio" name="exist">
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <button type="submit" class="btn">Update</button>
+            </div>
+        </form>
     </div>
 </div>
-
 @endsection
+
 @push('backend_script')
 <script>
-    $("#AdminFormUpdate").submit(function(event){
-        event.preventDefault();
-    // function adminRegistration(){
-       let name   = $('#adminname').val();
-       let email  = $('#adminemail').val();
-       let password = $('#adminpassword').val();
-       let admin_area = $('#adminarea').val();
-       let role   = $('#adminrole').val();
-       let status = $('#adminstatus').val();
-       let id = $('#hiddenAdminID').val();
-      
-       const admindata = new FormData();
-        admindata.append("name", name);
-        admindata.append("email", email);
-        admindata.append("pass", password);
-        admindata.append("admin_area", admin_area);
-        admindata.append("role", role);
-        admindata.append("status", status);
-        admindata.append("id", id);
-        const fileInput = document.getElementById("adminavatar");
-                const file = fileInput.files[0];
-                if (!file) {
-                    alert("Please select an image first.");
-                    return;
-                }
-                admindata.append("avatar", file);
+    $("#AdminFormUpdate").submit(function (e) {
+        e.preventDefault();
 
-       $.ajax({
-        url: "{{url('admins/update_admin')}}",
+        let formData = new FormData(this);
+        formData.append("id", $("#hiddenAdminID").val());
+
+        $.ajax({
+            url: "{{ url('admins/update_admin') }}",
             type: "POST",
-            data: admindata,
+            data: formData,
             processData: false,
-            contentType: false, 
-            enctype: "multipart/form-data",
-            success: function (response) {
-                console.log(response);
-                $('#AdminFormmain')[0].reset();
-                document.getElementById('#adminEmailID').innerHTML = "email is wrong";
+            contentType: false,
+            success: function (res) {
+                alert("Admin updated successfully!");
+                console.log(res);
             },
-
-       });
-        
-    })
+            error: function (err) {
+                console.error("Error:", err);
+                alert("Something went wrong.");
+            }
+        });
+    });
 </script>
-
-
-
-<script src="{{asset('form/vendor/jquery/jquery.min.js')}}"></script>
-<!-- Vendor JS-->
-<script src="{{asset('form/vendor/select2/select2.min.js')}}"></script>
-<script src="{{asset('form/vendor/datepicker/moment.min.js')}}"></script>
-<script src="{{asset('form/vendor/datepicker/daterangepicker.js')}}"></script>
-
-<!-- Main JS-->
-<script src="{{asset('form/js/global.js')}}"></script>
-
-
 @endpush

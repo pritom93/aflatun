@@ -130,43 +130,65 @@ Desiners
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#designerForm').on('submit', function (e) {
-            e.preventDefault();
-    
-            // Clear old errors
-            $('#errorsList').html('');
-            $('.is-invalid').removeClass('is-invalid');
-    
-            const name = $('#adminame').val();
-            const email = $('#adminemail').val();
-            const phone = $('#phone').val();
-            const address = $('#address').val();
-            const bio = $('#bio').val();
-            const status = $('#status').val();
-    
-            const data = {
-                name: name,
-                email: email,
-                phone: phone,
-                address: address,
-                bio: bio,
-                status: status,
-            };
-    console.log(data);
-            $.ajax({
-                url: "{{ route('designer.store') }}",
-                type: "POST",
-                data: data,
-                dataType: 'json',
-                success: function (response) {
+    $('#designerForm').on('submit', function (e) {
+        e.preventDefault();
 
-                    alert(response.message || 'Designer added successfully!');
-                    $('#designerForm')[0].reset();
-                },
-               
-            });
+        // Clear errors
+        $('#errorsList').html('');
+        $('.is-invalid').removeClass('is-invalid');
+
+        // Collect values
+        const name = $('#adminname').val();
+        const email = $('#adminemail').val();
+        const phone = $('#phone').val();
+        const address = $('#address').val();
+        const bio = $('#bio').val();
+        const status = $('#status').val();
+        const image = $('#image')[0].files[0]; // <-- image file
+
+        // Create FormData
+        let formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('phone', phone);
+        formData.append('address', address);
+        formData.append('bio', bio);
+        formData.append('status', status);
+        if (image) {
+            formData.append('image', image);
+        }
+
+        $.ajax({
+            url: "{{ route('designer.store') }}",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            cache: false,
+            dataType: 'json',
+            success: function (response) {
+                alert(response.message || 'Designer added successfully!');
+                $('#designerForm')[0].reset();
+                $('#imagePreview').attr('src', '');
+              
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    const errors = xhr.responseJSON.errors;
+                    let errorHtml = '<ul>';
+                    for (let key in errors) {
+                        errorHtml += `<li>${errors[key][0]}</li>`;
+                    }
+                    errorHtml += '</ul>';
+                    $('#errorsList').html(errorHtml);
+                } else {
+                    alert('An unexpected error occurred.');
+                    console.log(xhr.responseText);
+                }
+            }
         });
     });
+});
     </script>
 <script>
     function previewImage(event) {

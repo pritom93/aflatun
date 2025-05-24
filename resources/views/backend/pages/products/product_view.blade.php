@@ -62,7 +62,7 @@ Category List
                     <a href="#" class="toggle-desc">See More</a>
                 </td>
                 <td><img class="img-fluid" style="width:70px;height:50px"
-                        src="{{ asset('images/products/' . $value->product_image) }}" /></td>
+                        src="{{ asset('images/products/'.$value->image) }}" /></td>
                 <td>{{$value->product_available_quantity}}</td>
                 <td>{{$value->promoted_item}}</td>
                 <td>{{$value->vat}}</td>

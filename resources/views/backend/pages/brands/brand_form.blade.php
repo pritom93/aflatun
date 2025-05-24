@@ -67,14 +67,6 @@ Dashboard
                         </div>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="name">Product Name</div>
-                    <div class="value">
-                        <div class="input-group">
-                            <input class="input--style-5" type="text" id="ProductName" name="ProductIDName">
-                        </div>
-                    </div>
-                </div>
                 <div>
                     <button id="" class="btn btn--radius-2 btn--red" type="submit">SUBMIT</button>
                 </div>
@@ -94,7 +86,6 @@ Dashboard
                 BrandsData.append('woner', $('#BrandWoner').val());
                 BrandsData.append('phone', $('#WonerPhone').val());
                 BrandsData.append('address', $('#WonerContuctAdress').val());
-                BrandsData.append('name', $('#ProductName').val());
                 const fileInput = document.getElementById("imageUpload");
                  const file = fileInput.files[0];
                  BrandsData.append("image", file);

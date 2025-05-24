@@ -25,7 +25,7 @@ Attribute
     <div class="wrapper wrapper--w790">
         <div class="card card-5">
             <div class="card-heading">
-                <h2 class="title">Update ATTRIBUTE</h2>
+                <h2 class="title">ATTRIBUTE</h2>
             </div>
             <div class="card-body">
                 <form id="attrFormID" method="">
@@ -90,6 +90,12 @@ Attribute
             dataType: 'json',
             success: function(response){ 
                 console.log(response);
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Attribute saved successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
             },
             error: function (xhr) {
                 if (xhr.status === 422) {

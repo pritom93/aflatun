@@ -4,17 +4,18 @@
 @section('content')
 <div class="row">
     <!-- Left Sidebar (Advertisement) -->
-    {{-- <div class="col-md-2">
+    <div class="col-md-2">
+        @foreach ($categories as $category)    
         <div class="menu p-3 bg-light border rounded">
-            <h5>Menu</h5>
-            <ul class="list-group">
-                <li class="list-group-item"><a href="#">Home</a></li>
-                <li class="list-group-item"><a href="#">Categories</a></li>
-                <li class="list-group-item"><a href="#">Offers</a></li>
-                <li class="list-group-item"><a href="#">Contact</a></li>
-            </ul>
+            <a href="/category/technology" class="cartcat">
+                <img src="{{asset('images/categories/'.$category->icon)}}" class="imagecart" alt="Category Image">
+                <div class="cbdy">
+                    <div class="cttle">{{$category->category_name}}</div>
+                </div>
+            </a>
         </div>
-    </div> --}}
+        @endforeach
+    </div>
 
     <!-- Center Content (Products) -->
     <div class="col-md-8">
@@ -36,7 +37,7 @@
                             {{$product->name}}
                         </h5>
                         <p class="product-description" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
-                            {{Str::limit($product->description, 60, '...')}}
+                            {{Str::limit($product->description, 50, '...')}}
                         </p>
                         
                         <!-- Product Price -->
@@ -90,17 +91,73 @@
     </div>
 
     <!-- Right Sidebar (Advertisement) -->
-    {{-- <div class="col-md-2">
+    <div class="col-md-2">
         <div class="advertisement p-3 bg-light border rounded">
-            <h5>Advertisement</h5>
+            <h5></h5>
             <img src="{{ asset('images/ads/ad-banner.jpg') }}" style="width: 100%; height: 200px;" alt="Ad Banner">
-            <p class="mt-2">Check out our latest offers!</p>
+            <p class="mt-2"></p>
         </div>
-    </div> --}}
+    </div>
 </div>
 <!-- jQuery for changing product image and price -->
 @endsection
 @push('link')
+<style>
+    .cartcat {
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(135deg, #ffffff, #f8f9fa);
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+  
+    .cartcat:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+  
+    .imagecart {
+      height: 200px;
+      object-fit: cover;
+      width: 100%;
+    }
+  
+    .cbdy {
+      padding: 1.2rem;
+    }
+  
+    .cttle {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+  
+    .vtgrydsc {
+      font-size: 1rem;
+      color: #666;
+    }
+  
+    /* Animation */
+    @keyframes popIn {
+      0% {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  
+    .cartcat {
+      animation: popIn 0.5s ease-in-out;
+    }
+  </style>
 <style>
     
     body {

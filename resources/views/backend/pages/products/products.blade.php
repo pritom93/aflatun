@@ -71,12 +71,16 @@ Dashboard
                         </div>                       
                     </div>
 
-
+                    <div class="form-row mb-4">
+                        <select class="form-control tagging" multiple="multiple">
+                        </select>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="getAttrValue()">add</button>
+                    </div>
                     <div id="combinationsContainer">
                         <!-- First Row (Template Row) -->
                         <div class="form-row mb-4 combination-row">
                             <!-- Size -->
-                            <div class="form-group col-md-1">
+                            {{-- <div class="form-group col-md-1">
                                 <label>Size</label>
                                 <select class="form-control size-select">
                                     <option value="">Select Size</option>
@@ -84,10 +88,10 @@ Dashboard
                                     <option value="{{$value->id}}">{{$value->size_name}}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
 
                             <!-- Color -->
-                            <div class="form-group col-md-2">
+                            {{-- <div class="form-group col-md-2">
                                 <label>Color</label>
                                 <select class="form-control color-select">
                                     <option value="">Select Color</option>
@@ -95,7 +99,7 @@ Dashboard
                                     <option value="{{$value->id}}">{{$value->color_name}}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             <!-- Price -->
                             <div class="form-group col-md-1">
                                 <label>Price</label>
@@ -321,5 +325,33 @@ Dashboard
 <!-- Main JS-->
 <script src="{{asset('form/js/global.js')}}"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.10.0/dist/js/coreui.bundle.min.js"></script>
-
+<script>
+    $(".tagging").select2({
+    tags: true,
+    data: @json($attributes->map(fn($dt) => ['id' => $dt->id, 'text' => $dt->name])->toArray())
+});
+function getAttrValue(){
+    // Get select2 selected value
+    let selectedValues = $(".tagging").val();
+    $.ajax({
+        url: "{{ url('admins/get/attribute-values') }}",
+        type: "GET",
+        data: { attribute_ids: selectedValues },
+        success: function (response) {
+            console.log(response)
+            if (response.status === "success") {
+                console.log(response.data); // Log the data for debugging
+                // Process the response data as needed
+            } else {
+                alert("Failed to fetch data.");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+            alert("An error occurred while fetching data.");
+        }
+    });
+    console.log(selectedValues);
+}
+</script>
 @endpush

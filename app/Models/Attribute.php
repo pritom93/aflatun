@@ -18,6 +18,6 @@ class Attribute extends Model
     ];
     public function attrvalue()
     {
-        return $this->hasOne(AttrValue::class);
+        return $this->hasMany(AttrValue::class,'attrname_id');
     }
 }

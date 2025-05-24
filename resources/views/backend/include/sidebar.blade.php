@@ -59,125 +59,59 @@
             </li>
 
             <li class="menu">
-                <a href="{{url('admins/category')}}" aria-expanded="false" class="dropdown-toggle">
+                <a href="#Adding" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-message-square">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            class="feather feather-zap">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                         </svg>
-                        <span>New Category</span>
+                        <span>Adding</span>
+                    </div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-chevron-right">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
                     </div>
                 </a>
+                <ul class="collapse submenu list-unstyled" id="Adding" data-parent="#accordionExample">
+                    <li>
+                        <a href="{{url('admins/category')}}"> New Category </a>
+                    </li>
+                    <li>
+                        <a href="{{url('admins/unit')}}"> New Unit </a>
+                    </li>
+                    <li>
+                        <a href="{{url('admins/products')}}"> New Product </a>
+                    </li>
+                    <li>
+                        <a href="{{url('admins/brands')}}"> New Brand </a>
+                    </li>
+                    <li>
+                        <a href="{{url('admins/color')}}"> New Brand </a>
+                    </li>
+                    <li>
+                        <a href="{{url('admins/sizes')}}"> New Size </a>
+                    </li>
+                    <li>
+                        <a href="{{url('admins/color')}}"> New Color </a>
+                    </li>
+                    <li>
+                        <a href="{{url('admins/add/attribute')}}"> New Attribute </a>
+                    </li>
+                    <li>
+                        <a href="{{url('admins/attr/attr_val')}}"> New Value</a>
+                    </li>
+                    <li>
+                        <a href="{{url('admins/new-role-creating')}}"> New Role</a>
+                    </li>
+                </ul>
             </li>
 
             <li class="menu">
-                <a href="{{url('admins/unit')}}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-mail">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                            </path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                        <span>Unit</span>
-                    </div>
-                </a>
-            </li>
-
-            <li class="menu">
-                <a href="{{url('admins/products')}}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-edit">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                        <span>Products</span>
-                    </div>
-                </a>
-            </li>
-
-            <li class="menu">
-                <a href="{{url('admins/brands')}}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-file-text">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
-                        <span>Brands</span>
-                    </div>
-                </a>
-            </li>
-
-            <li class="menu">
-                <a href="{{url('admins/color')}}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-file-plus">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="12" y1="18" x2="12" y2="12"></line>
-                            <line x1="9" y1="15" x2="15" y2="15"></line>
-                        </svg>
-                        <span>Color</span>
-                    </div>
-                </a>
-            </li>
-            <li class="menu">
-                <a href="{{url('admins/sizes')}}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-file-plus">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="12" y1="18" x2="12" y2="12"></line>
-                            <line x1="9" y1="15" x2="15" y2="15"></line>
-                        </svg>
-                        <span>Size</span>
-                    </div>
-                </a>
-            </li>
-
-            <li class="menu">
-                <a href="{{url('admins/add/attribute')}}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-map-pin">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        <span>Attribute</span>
-                    </div>
-                </a>
-            </li>
-
-            <li class="menu">
-                <a href="{{url('admins/attr/attr_val')}}" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-dollar-sign">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                        <span>Attribute Value Insert</span>
-                    </div>
-                </a>
-            </li>
-
-            <li class="menu">
-                <a href="apps_calendar.html" aria-expanded="false" class="dropdown-toggle">
+                <a href="{{url('admins/pending-orders')}}" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -187,7 +121,7 @@
                             <line x1="8" y1="2" x2="8" y2="6"></line>
                             <line x1="3" y1="10" x2="21" y2="10"></line>
                         </svg>
-                        <span></span>
+                        <span>Pending Orders</span>
                     </div>
                 </a>
             </li>
@@ -252,25 +186,7 @@
                         <a href="{{url('admins/attr/view_attr_val')}}"> Attr Values</a>
                     </li>
                     <li>
-                        <a href="component_timeline.html"> Timeline </a>
-                    </li>
-                    <li>
-                        <a href="component_snackbar.html"> Notifications </a>
-                    </li>
-                    <li>
-                        <a href="component_session_timeout.html"> Session Timeout </a>
-                    </li>
-                    <li>
-                        <a href="component_media_object.html"> Media Object </a>
-                    </li>
-                    <li>
-                        <a href="component_list_group.html"> List Group </a>
-                    </li>
-                    <li>
-                        <a href="component_pricing_table.html"> Pricing Tables </a>
-                    </li>
-                    <li>
-                        <a href="component_lightbox.html"> Lightbox </a>
+                        <a href="{{url('admins/new-role-view')}}"> Role </a>
                     </li>
                 </ul>
             </li>
@@ -283,7 +199,7 @@
                             class="feather feather-zap">
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                         </svg>
-                        <span>Fonted</span>
+                        <span>Fonted View</span>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -301,53 +217,12 @@
                         <a href="{{url('admins/view-designer')}}"> Designer </a>
                     </li>
                     <li>
-                        <a href="element_badges.html"> Badges </a>
+                        <a href="{{url('admins/view-event')}}"> Events </a>
                     </li>
                     <li>
-                        <a href="element_breadcrumbs.html"> Breadcrumbs </a>
+                        <a href="{{url('admins/sliders-view')}}"> Slider </a>
                     </li>
-                    <li>
-                        <a href="element_buttons.html"> Buttons </a>
-                    </li>
-                    <li>
-                        <a href="element_buttons_group.html"> Button Groups </a>
-                    </li>
-                    <li>
-                        <a href="element_color_library.html"> Color Library </a>
-                    </li>
-                    <li>
-                        <a href="element_dropdown.html"> Dropdown </a>
-                    </li>
-                    <li>
-                        <a href="element_infobox.html"> Infobox </a>
-                    </li>
-                    <li>
-                        <a href="element_jumbotron.html"> Jumbotron </a>
-                    </li>
-                    <li>
-                        <a href="element_loader.html"> Loader </a>
-                    </li>
-                    <li>
-                        <a href="element_pagination.html"> Pagination </a>
-                    </li>
-                    <li>
-                        <a href="element_popovers.html"> Popovers </a>
-                    </li>
-                    <li>
-                        <a href="element_progress_bar.html"> Progress Bar </a>
-                    </li>
-                    <li>
-                        <a href="element_search.html"> Search </a>
-                    </li>
-                    <li>
-                        <a href="element_tooltips.html"> Tooltips </a>
-                    </li>
-                    <li>
-                        <a href="element_treeview.html"> Treeview </a>
-                    </li>
-                    <li>
-                        <a href="element_typography.html"> Typography </a>
-                    </li>
+                    
                 </ul>
             </li>
 
@@ -573,10 +448,10 @@
                         <a href="{{url('admins/new-designer')}}"> Desiners </a>
                     </li>
                     <li>
-                        <a href="user_profile.html"> Event </a>
+                        <a href="{{url('admins/new-event')}}"> Events </a>
                     </li>
                     <li>
-                        <a href="user_account_setting.html"> Account Settings </a>
+                        <a href="{{url('admin/sliders')}}"> Sliders </a>
                     </li>
                 </ul>
             </li>
@@ -755,7 +630,7 @@
                             <polyline points="4 17 10 11 4 5"></polyline>
                             <line x1="12" y1="19" x2="20" y2="19"></line>
                         </svg>
-                        <span>Starter Kit</span>
+                        <span>Reports</span>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -767,17 +642,17 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="starter-kit" data-parent="#accordionExample">
                     <li>
-                        <a href="starter_kit_blank_page.html"> Blank Page </a>
+                        <a href="{{url('admins/sells-reports')}}">Sells Report</a>
                     </li>
                     <li>
-                        <a href="starter_kit_breadcrumb.html"> Breadcrumb </a>
+                        <a href="{{url('admins/category-sell-reports')}}"> Categoryways </a>
                     </li>
                     <li>
-                        <a href="starter_kit_boxed.html"> Boxed </a>
+                        <a href="{{url('admins/category-profit')}}"> Categorywise Profit </a>
                     </li>
                     <li>
-                        <a href="starter_kit_alt_menu.html"> Alternate Menu </a>
-                    </li>
+                        <a href="{{url('admins/product-profit')}}"> Product Profit </a>
+                    </li> 
                 </ul>
             </li>
 

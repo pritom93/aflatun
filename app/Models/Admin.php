@@ -19,4 +19,7 @@ class Admin extends Model
         'avatar',
         'status',
     ];
+    public function roles(){
+        return $this->belongsTo(Role::class);
+    }
 }

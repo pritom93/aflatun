@@ -1,21 +1,20 @@
 @extends('font.master.mastering')
 @push('link')
 <style>
-
     .image-magnifier {
-    position: relative;
-    overflow: hidden;
-    cursor: zoom-in;
+        position: relative;
+        overflow: hidden;
+        cursor: zoom-in;
+    }
 
-}
+    .image-magnifier img {
+        transition: transform 0.2s ease-in-out;
+    }
 
-.image-magnifier img {
-    transition: transform 0.2s ease-in-out;
-}
+    .image-magnifier:hover img {
+        transform: scale(2);
+    }
 
-.image-magnifier:hover img {
-    transform: scale(2);
-}
     body {
         background-color: #f5f5f5;
     }
@@ -68,7 +67,7 @@
         color: rgb(12, 6, 6);
     }
 
-    .btn-add-cart {
+    .btn-add-cart, .btn-buy-now {
         background: rgb(12, 6, 6);
         color: white;
         font-weight: bold;
@@ -80,27 +79,15 @@
         background: #074200;
     }
 
-    .btn-buy-now {
-        background: rgb(12, 6, 6);
-        color: white;
-        font-weight: bold;
-        border-radius: 20px;
-        padding: 8px 12px;
-    }
-
     .btn-buy-now:hover {
         background: #d84315;
     }
 </style>
 @endpush
+
 @section('content')
 <div class="container mt-5">
     <div class="row">
-        <!-- Product Images -->
-        {{-- <div class="col-md-8">
-            <img id="product-image-{{$products->id}}" src="{{ asset('images/products/'.$products->image) }}"
-                class="img-fluid rounded">
-        </div> --}}
         <div class="col-md-8">
             <div class="image-magnifier">
                 <img id="product-image-{{$products->id}}" 
@@ -109,53 +96,72 @@
             </div>
         </div>
 
-        <!-- Product Details -->
         <div class="col-md-4">
             <div class="product-details mt-3">
                 <h5 class="product-title">{{$products->name}}</h5>
                 <div class="product-rating">★★★★☆ (4.5)
                     <br>
-                    <strong class="sku">STOCK:</strong> <span class="skus" id="product-stock-{{$products->id}}">{{
-                        $products->product_variation->first()->stock ?? 'N/A' }}</span>
+                    <strong class="sku">STOCK:</strong> 
+                    <span class="skus" id="product-stock-{{$products->id}}">
+                        {{ $products->product_variation->first()->stock ?? 'N/A' }}
+                    </span>
                     <br>
-                    <strong class="skus">SKU:</strong> <span class="skus" id="product-sku-{{$products->id}}">{{
-                        $products->product_variation->first()->sku ?? 'N/A' }}</span>
+                    <strong class="skus">SKU:</strong> 
+                    <span class="skus" id="product-sku-{{$products->id}}">
+                        {{ $products->product_variation->first()->sku ?? 'N/A' }}
+                    </span>
                 </div>
+
                 <p class="product-price">
                     <span id="product-price-{{$products->id}}">
                         BDT: {{ $products->product_variation->first()->price ?? 'N/A' }}
                     </span>
                 </p>
 
-                <!-- Color Buttons -->
+                <!-- Color Buttons (only if stock > 0) -->
                 <div class="product-colors d-flex">
                     @foreach ($products->colors as $color)
-                    <button class="color-btn me-2 border rounded-circle px-2 mx-2" data-product-id="{{ $products->id }}"
-                        data-image="{{ asset('images/products/variant/'.$color->image) }}" {{-- {{--
-                        data-price="{{ $color->price }}" --}} data-color="{{ $color->id }}"
-                        style="width: 30px; height: 30px; background-color: {{ $color->color_code}}; border: 2px solid #ddd;">
-                    </button>
+                        @php
+                            $hasStock = $products->product_variants
+                                ->where('color_id', $color->id)
+                                ->where('stock', '>', 0)
+                                ->count() > 0;
+                        @endphp
+
+                        @if($hasStock)
+                            <button class="color-btn me-2 border rounded-circle px-2 mx-2" 
+                                    data-product-id="{{ $products->id }}"
+                                    data-image="{{ asset('images/products/variant/'.$color->image) }}"
+                                    data-color="{{ $color->id }}"
+                                    style="width: 30px; height: 30px; background-color: {{ $color->color_code}}; border: 2px solid #ddd;">
+                            </button>
+                        @endif
                     @endforeach
                 </div>
-                <!-- Size Buttons -->
-                <div class="product-size d-flex mt-3">
-                </div>
 
-                <!-- Buttons -->
+                <!-- Size Buttons (populated dynamically via JS) -->
+                <div class="product-size d-flex mt-3"></div>
+
                 <button class="btn btn-add-cart w-100 mt-2 btn-primary add-to-cart"
-                    data-product-id="{{ $products->id }}" data-product-name="{{ $products->name }}"
-                    data-price="{{ $products->product_variation->first()->price ?? 0 }}" data-color="">
+                        data-product-id="{{ $products->id }}"
+                        data-product-name="{{ $products->name }}"
+                        data-price="{{ $products->product_variation->first()->price ?? 0 }}"
+                        data-color="">
                     Add to Cart
                 </button>
-                <a href="{{url('/cart')}}"><button class="btn btn-buy-now w-100 mt-2 btn-success">Buy Now</button><a>
-            </div>
-            </br>
-            <p class="descriptionp">{{$products->description}}</p>
 
+                <a href="{{url('/cart')}}">
+                    <button class="btn btn-buy-now w-100 mt-2 btn-success">Buy Now</button>
+                </a>
+
+                <br><br>
+                <p class="descriptionp">{{$products->description}}</p>
+            </div>
         </div>
     </div>
 </div>
 @endsection
+
 @push('script')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -166,24 +172,34 @@ $(document).ready(function() {
 
     async function findData(colorId, sizeId) {
         const variants = @json($products->product_variants);
-        return variants.find(variant => variant.color_id == colorId && variant.size_id == sizeId) || null;
+        return variants.find(v => 
+            v.color_id == colorId && 
+            v.size_id == sizeId &&
+            v.stock > 0
+        ) || null;
     }
 
-    // Handle Color Selection
     $(".color-btn").click(async function() {
         selectedColor = $(this).data("color");
         var productId = $(this).data("product-id");
 
-        // Get all variations for selected color
-        const filterVariation = @json($products->product_variants).filter(item => item.color_id == selectedColor);
-        
+        const filterVariation = @json($products->product_variants).filter(item => 
+            item.color_id == selectedColor && item.stock > 0
+        );
+
         if (filterVariation.length > 0) {
             $("#product-image-" + productId).attr("src", productUri + filterVariation[0]['image']);
         }
 
-        // Update Available Sizes
         const availableSizes = filterVariation.map(d => d['size_id']);
-        const filteredSizes = @json($products->sizes).filter(size => availableSizes.includes(size.id));
+        const filteredSizes = @json($products->sizes).filter(size =>
+            availableSizes.includes(size.id) &&
+            @json($products->product_variants).some(variant =>
+                variant.color_id == selectedColor &&
+                variant.size_id == size.id &&
+                variant.stock > 0
+            )
+        );
 
         let sizeButtons = "";
         filteredSizes.forEach(data => {
@@ -196,7 +212,6 @@ $(document).ready(function() {
 
         $(".product-size").html(sizeButtons);
 
-        // Update Stock, SKU, and Price if Size is already selected
         const variant = await findData(selectedColor, selectedSize);
         if (variant) {
             $("#product-price-" + productId).text("BDT: " + variant.price);
@@ -205,12 +220,10 @@ $(document).ready(function() {
         }
     });
 
-    // Handle Size Selection
     $(document).on("click", ".size-btn", async function() {
         selectedSize = $(this).data("size");
         var productId = $(this).data("product-id");
 
-        // Find Variant
         const variant = await findData(selectedColor, selectedSize);
         if (variant) {
             $("#product-price-" + productId).text("BDT: " + variant.price);
@@ -218,12 +231,10 @@ $(document).ready(function() {
             $("#product-sku-" + productId).text(variant.sku);
         }
 
-        // Highlight Selected Size
         $(".size-btn[data-product-id='" + productId + "']").removeClass("py-2 selected");
         $(this).addClass("py-2 selected");
     });
 
-    // Add to Cart Function
     $(".add-to-cart").click(function() {
         var productId = $(this).data("product-id");
         var productName = $(this).data("product-name");
@@ -236,8 +247,6 @@ $(document).ready(function() {
             alert("Please select both color and size before adding to cart!");
             return;
         }
-
-        console.log("Adding to cart:", { productId, productName, price, color, size, image });
 
         $.ajax({
             url: "{{ route('cart.add') }}",
@@ -253,128 +262,19 @@ $(document).ready(function() {
                 quantity: 1
             },
             success: function(response) {
-                updateCartCount(response.cart_count);
-                console.log(response);
-                    Swal.fire({
-                        title: "Added",
-                        text: response.message,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
-                    $('#cart-count').text(response.cart_count);
+                Swal.fire({
+                    title: "Added",
+                    text: response.message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                $('#cart-count').text(response.cart_count);
             }  
         });
     });
 
-    // CART PAGE FUNCTIONALITY
-    updateTotal();
-
-    $(".increment").click(function() {
-        let input = $(this).siblings(".quantity");
-        input.val(parseInt(input.val()) + 1);
-        updateTotal();
-    });
-
-    $(".decrement").click(function() {
-        let input = $(this).siblings(".quantity");
-        let value = parseInt(input.val());
-        if (value > 1) {
-            input.val(value - 1);
-            updateTotal();
-        }
-    });
-
-    // Remove Item from Cart
-    $(".remove-btn").click(function() {
-        $(this).closest("tr").remove();
-        updateTotal();
-    });
-
-    // Update Price Dynamically in Cart
-    function updateTotal() {
-        let subtotal = 0;
-        $("#cart-items tr").each(function() {
-            let unitPrice = parseFloat($(this).find(".unit-price").text().replace(/[^\d.]/g, ""));
-            let quantity = parseInt($(this).find(".quantity").val());
-            let totalPrice = unitPrice * quantity;
-
-            $(this).find(".price").text("BDT: " + totalPrice.toFixed(2));
-            subtotal += totalPrice;
-        });
-
-        let tax = subtotal * 0.05;
-        let shipping = subtotal > 0 ? 100.00 : 0;
-        let finalTotal = subtotal + tax + shipping;
-
-        $("#subtotal").text("BDT: " + subtotal.toFixed(2));
-        $("#tax").text("BDT: " + tax.toFixed(2));
-        $("#shipping").text("BDT: " + shipping.toFixed(2));
-        $("#total-price").text("BDT: " + finalTotal.toFixed(2));
-    }
-
-    // Checkout Button Click
-    $("#checkout-btn").click(function() {
-        let cartItems = [];
-        $("#cart-items tr").each(function() {
-            let id = $(this).data("id");
-            let product = $(this).find("td:eq(1)").text();
-            let color = $(this).find("td:eq(2)").text();
-            let size = $(this).find("td:eq(3)").text();
-            let price = parseFloat($(this).find(".price").text().replace(/[^\d.]/g, ""));
-            let quantity = parseInt($(this).find(".quantity").val());
-
-            cartItems.push({ id, product, color, size, price, quantity });
-        });
-
-        let orderData = {
-            cart: cartItems,
-            subtotal: parseFloat($("#subtotal").text().replace("BDT: ", "")),
-            tax: parseFloat($("#tax").text().replace("BDT: ", "")),
-            shipping: parseFloat($("#shipping").text().replace("BDT: ", "")),
-            total: parseFloat($("#total-price").text().replace("BDT: ", "")),
-            address: $("#shipping-address").val(),
-            receiving: $(".Receiving-Time").val(),
-            name: $(".customerName").val(),
-            email: $(".emailaddress").val(),
-            phone: $(".phoneNumber").val(),
-            payment: $("#payment-method").val()
-        };
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.ajax({
-            url: "{{url('/checkout')}}",
-            type: "POST",
-            data: JSON.stringify(orderData),
-            contentType: "application/json",
-            success: function(response) {
-                if (response.cart_cleared) {
-                    $("#cart-items").empty();
-                    $("#subtotal").text("BDT: 0.00");
-                    $("#tax").text("BDT: 0.00");
-                    $("#shipping").text("BDT: 0.00");
-                    $("#total-price").text("BDT: 0.00");
-
-                    localStorage.removeItem("cart");
-                    sessionStorage.removeItem("cart");
-                }
-            },
-            error: function(error) {
-                console.log(error);
-                if (error.status == 401) {
-                    window.location.href = "{{ url('login_user')}}";
-                }
-            }
-        });
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
+    // Optional: Image magnifier
     const imageContainer = document.querySelector(".image-magnifier");
     const image = imageContainer.querySelector("img");
 
@@ -382,7 +282,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let rect = imageContainer.getBoundingClientRect();
         let x = (e.clientX - rect.left) / rect.width * 100;
         let y = (e.clientY - rect.top) / rect.height * 100;
-
         image.style.transformOrigin = `${x}% ${y}%`;
         image.style.transform = "scale(2)";
     });
@@ -393,7 +292,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 @endpush

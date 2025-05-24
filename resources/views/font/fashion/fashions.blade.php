@@ -18,15 +18,11 @@ Fashion
 <!-- Fashion Trends Slider -->
 <div id="fashionCarousel" class="carousel slide mt-5" data-bs-ride="carousel">
     <div class="carousel-inner">
+        @foreach($sliders as $slider)
         <div class="carousel-item active">
-            <img src="{{ asset('images/products/banner.png') }}" class="d-block w-100 slider-img" alt="Fashion Trend 1">
+            <img src="{{ asset('images/sliders/'.$slider->image) }}" class="d-block w-100 slider-img" alt="Fashion Trend 1">
         </div>
-        <div class="carousel-item">
-            <img src="{{ asset('images/products/banner1.png') }}" class="d-block w-100 slider-img" alt="Fashion Trend 2">
-        </div>
-        <div class="carousel-item">
-            <img src="{{ asset('images/products/banner2.png') }}" class="d-block w-100 slider-img" alt="Fashion Trend 3">
-        </div>
+        @endforeach 
     </div>
 </div>
 
@@ -34,21 +30,21 @@ Fashion
 <div class="container py-5 text-center">
     <h2 class="fw-bold">Meet Our Designers</h2>
     <div class="row mt-4">
-        {{-- @foreach($designers as $designer) --}}
+        @foreach($designers as $designer)
         <div class="col-md-3 d-flex justify-content-center">
             <div class="designer-card">
                 <div class="img-container">
-                    <img src="{{ asset('images/fashions/f1.jpg') }}" class="designer-img" alt="Designer image">
+                    <img src="{{ asset('images/designers/' . $designer->image) }}" class="designer-img" alt="Designer image">
                     <div class="overlay">
-                        <strong>Shimura Yuki</strong>
-                        <p class="mb-1">CEO of Renko KSB</p>
+                        <strong>{{ $designer->name }}</strong>
+                        <p class="mb-1">CEO of {{ $designer->name }}</p>
                         <button class="designer-button">View Profile</button>
                     </div>
                 </div>
             </div>
         </div>
         
-        {{-- @endforeach --}}
+        @endforeach
     </div>
 </div>
 
@@ -319,7 +315,7 @@ Fashion
 
     /* Slider Images */
     .slider-img {
-        height: 400px;
+        height: auto;
         object-fit: cover;
     }
 

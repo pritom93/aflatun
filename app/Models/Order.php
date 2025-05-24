@@ -17,5 +17,20 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // Client relation (if orders from clients table)
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'user_id');
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
     
 }

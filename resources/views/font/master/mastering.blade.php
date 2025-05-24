@@ -22,7 +22,7 @@
 
 <body>
    @include('font.include.header')
-   
+  
    <!-- fashion section start -->
    @yield('content')
    <!-- fashion section end -->
@@ -41,6 +41,17 @@
          });
       });
    </script>
+   <script>
+      // Search functionality
+      document.getElementById('searchInput').addEventListener('keyup', function() {
+          var value = this.value.toLowerCase();
+          var rows = document.querySelectorAll("#profitTable tbody tr");
+      
+          rows.forEach(function(row) {
+              row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+          });
+      });
+      </script>
 </body>
 
 </html>

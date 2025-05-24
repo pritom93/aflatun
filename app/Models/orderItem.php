@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderItem extends Model
 {
     use HasFactory;
+    protected $table = 'order_items';
     protected $fillable = [
         'order_id',
         'product_id',
@@ -18,9 +19,26 @@ class OrderItem extends Model
         'discount',
         'total_price'
     ];
-    protected $table = 'order_items';
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+    public function product()
+        {
+            return $this->belongsTo(Product::class, 'product_id');
+        }
+
+    public function color()
+        {
+            return $this->belongsTo(Color::class, 'color_id');
+        }
+
+     public function size()
+        {
+            return $this->belongsTo(Size::class, 'size_id');
+        }
+        public function client()
+    {
+    return $this->belongsTo(Client::class);
     }
 }

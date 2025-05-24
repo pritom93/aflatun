@@ -78,6 +78,37 @@ Values
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+<div class="modal fade" id="setValueModal" tabindex="-1" aria-labelledby="setValueModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="setValueModalLabel">Set Attribute Value</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="attrValueFormID">
+              @csrf
+              <input type="hidden" id="AttrValNameID" name="attrname">
+              <div class="mb-3">
+                  <label for="ValmainNameID" class="form-label">Main Name</label>
+                  <input type="text" class="form-control" id="ValmainNameID" name="ValmainNameID">
+              </div>
+              <div class="mb-3">
+                  <label for="AttrValDesID" class="form-label">Description</label>
+                  <input type="text" class="form-control" id="AttrValDesID" name="AttrValDesID">
+              </div>
+              <div class="mb-3">
+                  <label for="AttrCountID" class="form-label">Count</label>
+                  <input type="number" class="form-control" id="AttrCountID" name="AttrCountID">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 @endsection
@@ -105,6 +136,12 @@ Values
             dataType: 'json',
             success: function(response) {
                 console.log(response);
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Value saved successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
             },
             error: function(xhr) {
                 if (xhr.status === 422) {
@@ -134,6 +171,7 @@ Values
             }
         });
     });
+    
 });
 </script>
 

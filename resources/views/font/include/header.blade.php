@@ -18,7 +18,7 @@
                 {{-- <li class="nav-item"><a class="nav-link" href="{{url('/login_user')}}">Sign In</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{url('/signup_user')}}">Sign Up</a></li> --}}
                 <li class="nav-item">
-                    <input type="text" class="form-control" placeholder="Search" style="border-radius: 20px;">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search" style="border-radius: 20px;">
                 </li>
                 <li class="nav-item cart-container">
                     <a class="nav-link" href="{{ url('/cart') }}">
@@ -56,3 +56,14 @@
             <section class="new-content">
                 
             </section>
+            <script>
+                // Search functionality
+                document.getElementById('searchInput').addEventListener('keyup', function() {
+                    var value = this.value.toLowerCase();
+                    var rows = document.querySelectorAll("#profitTable tbody tr");
+                
+                    rows.forEach(function(row) {
+                        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+                    });
+                });
+                </script>

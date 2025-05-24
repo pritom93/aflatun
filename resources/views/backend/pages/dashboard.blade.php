@@ -10,25 +10,28 @@ Dashboard
                 <h6 class="">Statistics</h6>
             </div>
             <div class="w-chart">
+                <a href="{{url('/orders')}}">
                 <div class="w-chart-section">
                     <div class="w-detail">
-                        <p class="w-title">Total Visits</p>
+                        <p class="w-title">Total Orders</p>
                         <p class="w-stats">423,964</p>
                     </div>
                     <div class="w-chart-render-one">
                         <div id="total-users"></div>
                     </div>
                 </div>
+                </a>
 
                 <div class="w-chart-section">
                     <div class="w-detail">
-                        <p class="w-title">Paid Visits</p>
+                        <p class="w-title">Paid Orders</p>
                         <p class="w-stats">7,929</p>
                     </div>
                     <div class="w-chart-render-one">
                         <div id="paid-visits"></div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -36,9 +39,11 @@ Dashboard
     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
         <div class="widget widget-account-invoice-two">
             <div class="widget-content">
+
+                <a href="{{url('admins/category-orders')}}">
                 <div class="account-box">
                     <div class="info">
-                        <h5 class="">Pro Plan</h5>
+                        <h5 class="">Category Orders</h5>
                         <p class="inv-balance">$10,344</p>
                     </div>
                     <div class="acc-action">
@@ -59,6 +64,8 @@ Dashboard
                         <a href="javascript:void(0);">Upgrade</a>
                     </div>
                 </div>
+                </a>
+
             </div>
         </div>
     </div>

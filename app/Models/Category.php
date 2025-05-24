@@ -18,4 +18,9 @@ class Category extends Model
         'home_view',
         'status'
     ];
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+    
 }

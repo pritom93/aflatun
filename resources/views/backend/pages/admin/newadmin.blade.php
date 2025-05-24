@@ -25,7 +25,7 @@ Dashboard
     <div class="wrapper wrapper--w790">
         <div class="card card-5">
             <div class="card-heading">
-                <h2 class="title">NEW ADMIN REGISTRATION</h2>
+                <h2 class="title">ADMIN REGISTRATION</h2>
             </div>
             <div class="card-body">
                 <div id="errorsList" class="d-flex content-align-center"></div>
@@ -49,29 +49,35 @@ Dashboard
                             <p id="adminEmailID"></p>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="name">Password</div>
-                        <div class="value">
-                            <div class="input-group">
-                                <input class="input--style-5" type="password" id="adminpassword" name="password" />
-                                <p id="password" class="text-danger"></p>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div class="form-row">
                         <div class="name">Admin Area</div>
                         <div class="value">
-                            <div class="input-group">
-                                <input class="input--style-5" type="number" id="adminarea" name="adminarea">
-
+                        <div class="input-group">
+                            <div class="rs-select2 js-select-simple select--no-search">
+                                <select id="adminRoleArea" name="subject">
+                                    <option value="1">Dhaka</option>
+                                    <option value="2">Chittagong</option>
+                                </select>
+                                <div class="select-dropdown"></div>
                             </div>
+                        </div>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="name">Role</div>
+                        <div class="name">Role Permission</div>
                         <div class="value">
                             <div class="input-group">
-                                <input class="input--style-5" type="number" id="adminrole" name="adminrole">
+                                <div class="rs-select2 js-select-simple select--no-search">
+                                    <select id="adminrole" name="adminrole">
+                                        @foreach ($roles as $role )
+                                            
+                                        <option value="{{$role->id}}">{{$role->name}}</option>
+                                        @endforeach
+                                        
+                                    </select>
+                                    <div class="select-dropdown"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -96,6 +102,15 @@ Dashboard
                                     </select>
                                     <div class="select-dropdown"></div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="name">Password</div>
+                        <div class="value">
+                            <div class="input-group">
+                                <input class="input--style-5" type="password" id="adminpassword" name="password" />
+                                <p id="password" class="text-danger"></p>
                             </div>
                         </div>
                     </div>
@@ -131,7 +146,7 @@ Dashboard
        let name   = $('#adminname').val();
        let email  = $('#adminemail').val();
        let password = $('#adminpassword').val();
-       let admin_area = $('#adminarea').val();
+       let admin_area = $('#adminRoleArea').val();
        let role   = $('#adminrole').val();
        let status = $('#adminstatus').val();
       
@@ -142,13 +157,14 @@ Dashboard
         formData.append("admin_area", admin_area);
         formData.append("role", role);
         formData.append("status", status);
-        // const fileInput = document.getElementById("adminavatar");
-        //         const file = fileInput.files[0];
-        //         if (!file) {
-        //             alert("Please select an image first.");
-        //             return;
-        //         }
-        //         formData.append("avatar", file);
+        const fileInput = document.getElementById("adminavatar");
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert("Please select an image first.");
+                    return;
+                }
+                formData.append("avatar", file);
+                console.log(formData['avatar']);
 
        $.ajax({
         url: "{{url('admin/newadmin')}}",

@@ -47,4 +47,13 @@ class Product extends Model
         return $this->belongsToMany(Size::class, 'product_variants', 'product_id', 'size_id')
         ->distinct();
     }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }
